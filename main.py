@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 import logging
 import logging.config
+import json
 
+from flask import request
 from flask import Flask, jsonify
 from db import initdb
 
@@ -19,6 +21,25 @@ DAO = initdb.InitDB()
 @app.route("/", methods=['GET'])
 def index():
     return app.send_static_file('index.html')
+
+
+@app.route("/cms/login", methods=['GET'])
+def loginview():
+    return app.send_static_file('login.html')
+
+
+@app.route("/cms/login", methods=['POST'])
+def login():
+    para = request.get_data().decode()
+    print(para)
+    return jsonify(para)
+
+
+@app.route("/cms/admin", methods=['POST'])
+def admininfo():
+    para = request.get_data().decode()
+    print(para)
+    return jsonify(para)
 
 
 @app.route("/cms", methods=['GET'])
