@@ -1,10 +1,670 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title></title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <title>抽奖</title>
+    <script type="text/javascript" src="/static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.md5.js"></script>
+    <script type="text/javascript" src="/static/js/awardRotate.js"></script>
+
+    <script type="text/javascript">
+
+        signtamp = "";
+
+        actret = {
+            init: false,
+            acts: false,
+            token: null,
+            appkey: "YANkzmFzZGZqYXU",
+            appse: "330128771022E73D61F5A60E67C9DD43",
+            sign: null,
+            key: null,
+            record: "",
+            aid: null,
+            times: null,
+            points: null
+        };
+
+        /**
+         * 初始化数据接口
+         * */
+        function actInit(configdata) {
+            if (configdata) {
+                actret.key = configdata.key;
+                flushToken().done(function(){
+                    initAct().done(function(){
+                        actret.init = true;
+                        alert("sus");
+
+                        var tmpdata = [
+                            {
+                                'name':"1-1",
+                                'imgUrl':"111.png",
+                                'price':20
+                            },
+                            {
+                                'name':"2-2",
+                                'imgUrl':"111.png",
+                                'price':20
+                            },
+                            {
+                                'name':"3-3",
+                                'imgUrl':"111.png",
+                                'price':20
+                            },
+                            {
+                                'name':"4-4",
+                                'imgUrl':"111.png",
+                                'price':20
+                            },
+                            {
+                                'name':"5-5",
+                                'imgUrl':"111.png",
+                                'price':20
+                            }
+                        ];
+
+                        flushRedBox(tmpdata);
+
+                    }).fail(function(){
+                        alert("fail")
+                    });
+                }).fail(function(){
+                    console.log("fail");
+                });
+            }
+        }
+
+        /**
+         * 刷新token接口
+         * */
+        function flushToken() {
+            var nowtime = new Date();
+            signtamp = Date.parse(nowtime);
+            actret.sign = $.md5(actret.appkey + signtamp + actret.appse);
+
+            /*var url = "http://app.online.sh.cn:8080/online/v1/token2/get2?";
+            url = url + "app_key=" + actret.appkey;
+            url = url + "&sign=" + actret.sign;
+            url = url + "&timestamp=" + signtamp;
+            url = url + "&key=" + actret.key;*/
+
+            var defferd = $.Deferred();
+            url = "http://localhost:3000/user/get/1";
+            $.get(url).done(function (dt) {
+                if (dt.code == "2000") {
+                    actret.token = dt.data.token;
+                    defferd.resolve();
+                }else{
+                    defferd.resolve();
+                }
+            }).fail(function(){
+                defferd.reject();
+            });
+
+            return defferd.promise();
+        }
+
+
+        /**
+         * 初始化活动数据
+         * */
+        function initAct() {
+
+            /*var url = "http://app.online.sh.cn:8080/online/v1/activity/list?";
+            url = url + "token=" + actret.token;
+            url = url + "&app_key=" + actret.appkey;
+            url = url + "&sign=" + actret.sign;
+            url = url + "&timestamp=" + signtamp;*/
+
+            var defferd = $.Deferred();
+            url = "http://localhost:3000/user/get/1";
+
+            $.get(url).then(function (data) {
+                if (data && data.code) {
+                    actret.aid = data.activitys[0].id;
+                    actret.times = data.times;
+                    actret.points = data.points;
+
+                    var jps = data[actret.aid];
+                    var jparr = new Array();
+                    var rebox = new Array();
+                    $.each(jps, function (idx, tmpjp) {
+                        jparr.push(tmpjp.name);
+
+                        if (tmpjp.type == "1") {
+                            rebox.push(tmpjp);
+                        }
+                    });
+
+                    var lotter = data.lotteryRecords;
+
+                    $.each(lotter.reverse(), function (idx, tmpre) {
+                        var prestr = tmpre.mobile.substring(0, 3);
+                        var afstr = tmpre.mobile.substring(7, tmpre.mobile.length);
+                        var strmobile = prestr + "****" + afstr;
+                        actret.record = actret.record + ' ' + strmobile + ' 抽中 ' + tmpre.name;
+                    });
+
+                    flushData(actret.times, actret.points, actret.record);
+                    flushRedBox(rebox);
+
+                    var tmparr = jparr.concat();
+
+                    jpdata = tmparr.reverse();
+
+                    defferd.resolve();
+                }else{
+                    defferd.resolve();
+                }
+            },function(){
+                defferd.reject();
+            });
+
+            return defferd.promise();
+        }
+
+
+        /**
+         * 抽奖
+         * */
+        function choujiang() {
+
+            var nowtime = new Date();
+            var hh = nowtime.getHours();
+
+            if (hh >= 0 && hh < 8) {
+                alert("活动还未开始");
+
+            } else {
+                if (actret.init) {
+                    if (actret.times < 1) {
+                        actret.msg = "您的今日抽奖次数已用完，赶紧分享好友注册赢取更多抽奖机会吧";
+                        alert(actret.msg);
+
+                    }else{
+                        /*var url = "http://app.online.sh.cn:8080/online/v1/activity/lottery?";
+                        url = url + "token=" + actret.token;
+                        url = url + "&app_key=" + actret.appkey;
+                        url = url + "&sign=" + actret.sign;
+                        url = url + "&timestamp=" + signtamp;
+                        url = url + "&activityId=" + actret.aid;*/
+                        var url = "http://localhost:3000/user/get/1";
+                        $.get(url).done(function(data) {
+                            if (data && data.times >= 0) {
+                                var box = $(".boxiang");
+                                box.css('background-image','url("/static/images/open.png")')
+
+                                actret.times = data.times;
+                                actret.code = data.code;
+                                actret.points = data.points;
+                                if (data.code > 0) {
+
+                                } else {
+
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        }
+
+
+        /**
+         * 中奖提示
+         * */
+        function execute(txt) {
+            if (txt.match("-")) {
+                alert("恭喜您抽中了" + txt.substr(txt.indexOf('-') + 1, txt.length - 1) + ",我们将统一发送领奖信息，请注意站内通知，谢谢参与。");
+            } else {
+                if (txt.match("积分")) {
+                    alert("您抽中:" + txt);
+                } else {
+                    alert("谢谢您");
+                }
+            }
+
+            flushData(actret.times, actret.points, actret.record);
+        }
+
+        /**
+         * 跑马灯
+         * */
+        function lefttxt() {
+            if (actret.record != "") {
+                var id = document.getElementById("cjrecord");
+                if (typeof id.textContent == "string") {
+                    id.textContent = actret.record.substring(0, actret.record.length);
+                } else {
+                    id.innerText = actret.record.substring(0, actret.record.length);
+                }
+                actret.record = actret.record + actret.record.substring(0, 1);
+                actret.record = actret.record.substring(1, actret.record.length);
+            }
+        }
+
+        /**
+         * 刷新动态数据
+         * */
+        function flushData(time, points, record) {
+            $("#zongcs").html("您还有 " + time + " 次抽奖机会");
+            $("#zongjf").html("您还有 " + points + " 积分可用");
+            $("#cjrecord").html(record);
+        }
+
+        /**
+         * 刷新红包区域
+         * */
+        function flushRedBox(data) {
+            var htmlstr = "";
+            if (data.length == 3) {
+                htmlstr += "\<div class='boxline'\>";
+                $.each(data, function (idx, temp) {
+                    htmlstr += "\<div class='realbox'\>" +
+                            "\<div class='imgbox'\>" +
+                            "\<img src='/static/images/" + temp.imgUrl + "'\>" +
+                            "\<img src='/static/images/jpline.png'\>" +
+                            "\</div\>" +
+                            "\<div\>" + temp.name.substr(0, temp.name.indexOf('-')) + "\</div\>" +
+                            "\<div\>" + temp.name.substr(temp.name.indexOf('-') + 1, temp.name.length - 1) + "\</div\>" +
+                            "\<div\>" + "价值￥" + temp.price + "元" + "\</div\>" +
+                            "\</div\>";
+
+                });
+                htmlstr += "\</div\>";
+            }
+
+            if (data.length == 4) {
+                $.each(data, function (idx, temp) {
+                    if (idx % 2 == 0) {
+                        htmlstr += "\<div class='boxline'\>";
+                    }
+
+                    htmlstr += "\<div class='realbox'\>" +
+                            "\<div class='imgbox'\>" +
+                            "\<img src='/static/images/" + temp.imgUrl + "'\>" +
+                            "\<img src='/static/images/jpline.png'\>" +
+                            "\</div\>" +
+                            "\<div\>" + temp.name.substr(0, temp.name.indexOf('-')) + "\</div\>" +
+                            "\<div\>" + temp.name.substr(temp.name.indexOf('-') + 1, temp.name.length - 1) + "\</div\>" +
+                            "\<div\>" + "价值￥" + temp.price + "元" + "\</div\>" +
+                            "\</div\>";
+
+                    if (idx % 2 == 1) {
+                        htmlstr += "\</div\>";
+                    }
+                });
+            }
+
+            if (data.length == 5) {
+
+                $.each(data, function (idx, temp) {
+
+                    if (idx == 0 || idx == 3) {
+                        htmlstr += "\<div class='boxline'\>";
+                    }
+
+                    htmlstr += "\<div class='realbox'\>" +
+                            "\<div class='imgbox'\>" +
+                            "\<img src='/static/images/" + temp.imgUrl + "'\>" +
+                            "\<img src='/static/images/jpline.png'\>" +
+                            "\</div\>" +
+                            "\<div\>" + temp.name.substr(0, temp.name.indexOf('-')) + "\</div\>" +
+                            "\<div\>" + temp.name.substr(temp.name.indexOf('-') + 1, temp.name.length - 1) + "\</div\>" +
+                            "\<div\>" + "价值￥" + temp.price + "元" + "\</div\>" +
+                            "\</div\>";
+
+                    if (idx == 2 || idx == 4) {
+                        htmlstr += "\</div\>";
+                    }
+                });
+            }
+
+            $(".redbox").html(htmlstr);
+        }
+
+
+        $(document).ready(function () {
+            actInit({key:"12"});
+
+            $('.baoxiang').click(function(){
+                choujiang();
+            });
+
+            $('#fxtxtid').click(function () {
+                var url = "http://app.online.sh.cn:8080/online/getshare?key=";
+                url = url + actret.key;
+                window.location.href = url;
+            });
+
+            $('#dhtxtid').click(function () {
+                if (actret.points >= 5) {
+                    var url = "http://app.online.sh.cn:8080/online/v1/store/exlottery?";
+                    url = url + "token=" + actret.token;
+                    url = url + "&app_key=" + actret.appkey;
+                    url = url + "&sign=" + actret.sign;
+                    url = url + "&timestamp=" + signtamp;
+                    url = url + "&integral=" + 5;
+
+                    $.post(url).done(function (data) {
+                        if (data && data.code) {
+                            if (data.code == "10005") {
+                                alert(data.msg);
+                                return;
+                            }
+
+                            if (data.times >= 0) {
+                                actret.times = data.times;
+                                actret.points = data.points;
+                                flushData(actret.times, actret.points, actret.record);
+                            }
+                        }
+                    }).fail(function(){
+
+                    });
+                } else {
+                    alert('您的积分不足，赶紧分享好友注册赢取更多抽奖机会吧');
+                }
+            });
+
+            setInterval(lefttxt, 300)
+        });
+    </script>
+
+
+    <style>
+        body {
+            padding-top: 45%;
+            color: #333;
+            font-size: 12px;
+            background-image: url('/static/images/bg.png');
+            background-size: 100%;
+            overflow-x: hidden;
+            background-repeat: no-repeat
+        }
+
+        ul, ol {
+            list-style-type: none;
+        }
+
+        img {
+            vertical-align: middle;
+        }
+
+        input {
+            font-size: 12px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #000;
+        }
+
+        a:hover {
+            color: #c00;
+            text-decoration: none;
+        }
+
+        .clear {
+            clear: both;
+        }
+
+        .content {
+            display: block;
+            width: 96%;
+            margin: 0 auto;
+            padding-bottom: 2%;
+        }
+
+        .content .turnplate {
+            display: block;
+            width: 100%;
+            position: relative;
+        }
+
+        .zj {
+            background-image: url('/static/images/zjbg.png');
+            background-size: 100% 100%;
+        }
+
+        #cjrecord {
+            padding: 8px 6px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        #box1 {
+            padding-left: 10%;
+            padding-right: 10%;
+            padding-top: 1%;
+            color: white;
+        }
+
+        #box1 .desclt {
+            float: left;
+            width: 62%;
+            padding-top: 8%;
+        }
+
+        #box1 .descrt {
+            float: right;
+            width: 36%;
+        }
+
+        #box1 .descrt .fxbtn {
+            width: 100%;
+            height: 60px;
+            background-image: url('/static/images/fx.png');
+            background-size: 100% 100%;
+        }
+
+        #box2 {
+            padding-left: 10%;
+            padding-right: 10%;
+            padding-top: 4%;
+            color: #FED995;
+        }
+
+        #box2 .desclt {
+            float: left;
+            width: 62%;
+        }
+
+        #box2 .descrt {
+            float: right;
+            width: 36%;
+        }
+
+        #box2 .descrt .fxbtn {
+            width: 100%;
+            height: 35px;
+            background-image: url('/static/images/dh.png');
+            background-size: 100% 100%;
+        }
+
+        .wordjpbox {
+            padding-top: 4%;
+            color: #017797;
+        }
+
+        .wordjpbox .wordjp {
+            padding-left: 25%;
+            padding-right: 25%;
+        }
+
+        .wordjpbox .wordjp .wordjpin {
+            width: 100%;
+            padding: 14px 0;
+            background-image: url('/static/images/bqjp.png');
+            background-size: 100% 100%;
+        }
+
+        .wordjpbox .wordjp .wordjptip {
+            width: 100%;
+            padding: 14px 0;
+            background-image: url('/static/images/openbox.png');
+            background-size: 100% 100%;
+        }
+
+        .wordgzbox {
+        }
+
+        .wordgzbox .wordgztitle {
+            padding-top: 4%;
+            padding-left: 25%;
+            padding-right: 25%;
+        }
+
+        .wordgzbox .wordgztitle .wordgztitlein {
+            width: 100%;
+            padding: 14px 0;
+            background-image: url('/static/images/hdgz.png');
+            background-size: 100% 100%;
+        }
+
+        .wordgzbox .wordgz {
+            padding: 5% 2%;
+            color: white;
+        }
+
+        .redbox {
+            margin-top: 5%;
+        }
+
+        .redbox .boxline {
+            text-align: center;
+            padding: 2px 0;
+        }
+
+        .redbox .boxline .realbox {
+            margin: 0 2px;
+            padding-bottom: 5%;
+            width: 30%;
+            display: inline-block;
+            color: yellow;
+            font-weight: bold;
+            background-image: url('/static/images/jpbj.png');
+            background-size: 100% 100%;
+        }
+
+        .redbox .boxline .realbox .imgbox {
+            padding-top: 3%;
+            padding-left: 8%;
+            padding-right: 8%;
+        }
+
+        .redbox .boxline .realbox .imgbox img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .gamebox{
+            padding-top: 4%;
+        }
+
+        .gamebox .baoxiang{
+            margin: 0 2px;
+            width: 30%;
+            display: inline-block;
+            padding-top: 12%;
+            padding-bottom: 12%;
+            background-image: url('/static/images/close.png');
+            background-size: 100% 100%;
+        }
+    </style>
 </head>
 <body>
-    hahaha
+
+
+<div class="content">
+    <div class="zj">
+        <div id="cjrecord">恭喜您</div>
+    </div>
+
+    <div class="wordjpbox">
+        <div class="wordjp">
+            <div class="wordjptip"></div>
+        </div>
+    </div>
+
+    <div class="gamebox">
+        <div class="baoxiang">
+            <div class=""></div>
+        </div>
+
+        <div class="baoxiang">
+            <div class=""></div>
+        </div>
+
+        <div class="baoxiang">
+            <div class=""></div>
+        </div>
+    </div>
+
+    <div id="box1">
+        <div class="desclt">
+            <div id="zongcs" style="font-size:16px">
+                您还有 1次抽奖机会
+            </div>
+            <div class="">
+                点击分享获得更多机会
+            </div>
+        </div>
+        <div class="descrt">
+            <div class="fxbtn" id="fxtxtid">
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+
+    <div id="box2">
+        <div class="desclt">
+            <div id="zongjf" style="font-size:16px">
+                您有 80点积分可用
+            </div>
+            <div class="">
+                每5积分兑换一次
+            </div>
+        </div>
+        <div class="descrt">
+            <div class="fxbtn" id="dhtxtid">
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+
+    <div class="wordjpbox">
+        <div class="wordjp">
+            <div class="wordjpin"></div>
+        </div>
+    </div>
+
+    <div class="redbox"></div>
+
+    <div class="wordgzbox">
+        <div class="wordgztitle">
+            <div class="wordgztitlein"></div>
+        </div>
+        <div class="wordgz">
+            活动时间：2017年1月9日-2017年2月3日<br/>
+            参与对象：所有上海热线注册用户<br/>
+            活动内容：上海热线举办的迎新春玩游戏送大奖活动<br/>
+            活动规则：<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;活动期间凡上海热线注册用户均可参与活动，已注册的老用户每成功邀请一位新用户注册就将获得1次抽奖机会。
+            注册用户还可通过玩游戏或是积分兑换的方式来获得抽奖机会，每5个积分可换取1次抽奖机会，每日最多兑换3次。
+            抽奖次数在活动期间都有效且可以连续使用，活动结束后所有抽奖次数将被清零。<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;用户注册时请务必使用本人手机及手机号，如有中奖，我们将统一在活动结束后，通过站内信的方式通知中奖用户领奖方法，
+            请保持账号为登录状态。如因账号未登录、未留意领奖通知等情况，导致未收到或看到领奖通知，以及在最后领奖期限内未能前来领奖的，
+            上海热线有权取消中奖用户领奖资格。对于因作弊、利用程序漏洞、网络攻击等非正常方式赢得奖品的用户，一旦发现，
+            上海热线有权取消中奖用户的领奖资格。情节严重或恶劣的，上海热线将报相关执法部门依法处理。<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本活动最终解释权归上海热线信息网络有限公司所有，凡参与本活动用户均视为已知晓且认同上述规则规定。
+        </div>
+    </div>
+</div>
 </body>
 </html>

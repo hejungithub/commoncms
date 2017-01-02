@@ -1,65 +1,45 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import logging
+import logging.config
+
 from flask import Flask, jsonify
-from sqlalchemy import Column, Integer, String, create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
-
-Base = declarative_base()
-
-# 定义User对象:
-class User(Base):
-    # 表的名字:
-    __tablename__ = 'user'
-    # 表的结构:
-    id = Column(Integer, primary_key=True)
-    name = Column(String(20))
-
-# 初始化数据库连接:
-engine = create_engine('mysql+pymysql://root:123456@localhost:3306/test')
-# 创建DBSession类型:
-DBSession = sessionmaker(bind=engine)
+from db import initdb
 
 app = Flask(__name__)
 
 # log
-file_handler = logging.FileHandler('app.log')
-app.logger.addHandler(file_handler)
+logging.config.fileConfig("logger.conf")
+logger = logging.getLogger("example02")
 
-
-def initDb():
-    # 创建session对象:
-    session = DBSession()
-    # 创建新User对象:
-    new_user = User(id='70', name='Bob')
-    # 添加到session:
-    session.add(new_user)
-    # 提交即保存到数据库:
-    session.commit()
-    # 关闭session:
-    session.close()
-
-    obj = {'id': 1, 'name': "hehe"}
-    return obj
+# db
+DAO = initdb.InitDB()
 
 
 @app.route("/", methods=['GET'])
 def index():
-    initDb()
     return app.send_static_file('index.html')
 
 
-@app.route("/task", methods=['GET'])
-def get_tasks():
-    str = "呵呵"
+@app.route("/cms", methods=['GET'])
+def nav():
+    return app.send_static_file('cms.html')
 
-    tasks = initDb()
 
-    logging.warning("warn")
+@app.route("/user/add/<uname>", methods=['GET'])
+def user_add(uname):
+    obj = DAO.addUser(uname)
+    return jsonify(obj)
 
-    return jsonify({'tasks': tasks})
+
+@app.route("/user/get/<uid>", methods=['GET'])
+def user_get(uid):
+    try:
+        obj = DAO.getUser(uid)
+        return jsonify(obj)
+    finally:
+        logger.warning("warn1")
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=80)
+    app.run(host='127.0.0.1', port=3000, debug=True)
