@@ -5,7 +5,7 @@ import logging.config
 import json
 
 from flask import request
-from flask import Flask, jsonify
+from flask import Flask
 from db import initdb
 
 app = Flask(__name__)
@@ -19,45 +19,46 @@ DAO = initdb.InitDB()
 
 
 @app.route("/", methods=['GET'])
-def index():
-    return app.send_static_file('index.html')
-
-
-@app.route("/cms/login", methods=['GET'])
-def loginview():
+def mav():
     return app.send_static_file('login.html')
 
 
-@app.route("/cms/login", methods=['POST'])
+@app.route("/main", methods=['GET'])
+def main():
+    return app.send_static_file('cms.html')
+
+
+@app.route("/login", methods=['POST'])
 def login():
     para = request.get_data().decode()
     print(para)
-    return jsonify(para)
+    return json.dumps(para)
 
 
-@app.route("/cms/admin", methods=['POST'])
+@app.route("/admin", methods=['POST'])
 def admininfo():
     para = request.get_data().decode()
     print(para)
-    return jsonify(para)
+    return json.dumps(para)
 
 
-@app.route("/cms", methods=['GET'])
-def nav():
-    return app.send_static_file('cms.html')
+@app.route("/user/all/<page>", methods=['GET'])
+def user_all(page):
+    obj = DAO.alluser({'cur': page})
+    return json.dumps(obj)
 
 
 @app.route("/user/add/<uname>", methods=['GET'])
 def user_add(uname):
     obj = DAO.addUser(uname)
-    return jsonify(obj)
+    return json.dumps(obj)
 
 
 @app.route("/user/get/<uid>", methods=['GET'])
 def user_get(uid):
     try:
         obj = DAO.getUser(uid)
-        return jsonify(obj)
+        return json.dumps(obj)
     finally:
         logger.warning("warn1")
 

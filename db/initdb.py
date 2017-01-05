@@ -24,13 +24,43 @@ class InitDB:
     def __call__(self, **kwargs):
         pass
 
+    def listtodict(self, ret):
+        des = []
+        for result in ret:
+            des.append(result.to_dict())
+
+        return des
+
     def takeSes(self):
         session = InitDB.DBSession()
         return session
 
+    def alluser(self, pdict):
+        ses = self.takeSes()
+        try:
+            users = ses.query(User).limit(10).offset(int(pdict['cur']) * 10).all()
+            alls = ses.query(User).all()
+            if len(users) == 0:
+                raise BaseException
+            else:
+                allsize = len(alls)
+                ret = {
+                    'total': allsize,
+                    'page': round(allsize / 10),
+                    'cur': pdict['cur'],
+                    'data': self.listtodict(users)
+                }
+                ses.commit()
+                ses.close()
+                return ret
+
+        except:
+            ses.rollback()
+            ses.close()
+            return {}
+
     def getUser(self, uid):
         ses = self.takeSes()
-
         try:
             user = ses.query(User).filter(User.id == uid).one()
             ret = user.to_dict()
@@ -49,11 +79,9 @@ class InitDB:
             # 添加到session:
             ses.add(new_user)
 
-            result = ses.execute(
-                "SELECT * FROM user WHERE id=:param", {"param": 0}
-            )
+            result = ses.query(User).filter(User.id == 1).all()
 
-            if result.rowcount == 0:
+            if len(result) == 0:
                 raise BaseException
             else:
                 ret = new_user.to_dict()

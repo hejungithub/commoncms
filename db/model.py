@@ -6,17 +6,19 @@ from sqlalchemy.ext.declarative import declarative_base
 增加转化json对象处理
 """
 
-# db model base
-# add to_dict parse json
-Base = declarative_base()
-
 
 def to_dict(self):
     return {
         c.name: getattr(self, c.name, None) for c in self.__table__.columns
-    }
+        }
+
+
+# db model base
+# add to_dict parse json
+Base = declarative_base()
 
 Base.to_dict = to_dict
+
 
 class User(Base):
     __tablename__ = 'user'
@@ -26,7 +28,6 @@ class User(Base):
 
 
 class School(Base):
-
     __tablename__ = 'sch'
 
     id = Column(Integer, primary_key=True)
