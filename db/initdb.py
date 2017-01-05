@@ -47,7 +47,7 @@ class InitDB:
                 ret = {
                     'total': allsize,
                     'page': round(allsize / 10),
-                    'cur': pdict['cur'],
+                    'cur': int(pdict['cur']),
                     'data': self.listtodict(users)
                 }
                 ses.commit()
