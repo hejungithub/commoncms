@@ -3,11 +3,11 @@
 <head>
     <title>CMS</title>
     <!-- Custom Theme files -->
-    <script type="text/javascript" src="/static/js/jquery.min.js"></script>
-    <script type="text/javascript" src="/static/js/jquery.md5.js"></script>
-    <script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/cms/static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/cms/static/js/jquery.md5.js"></script>
+    <script type="text/javascript" src="/cms/static/js/jquery.cookie.js"></script>
 
-    <link href="/static/css/login.css" rel="stylesheet" type="text/css" media="all"/>
+    <link href="/cms/static/css/login.css" rel="stylesheet" type="text/css" media="all"/>
     <!-- Custom Theme files -->
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -51,7 +51,7 @@
                     $.cookie('cmsuser', para.username, {expires: 1, path: '/' });
                     $.cookie('cmsupwd', para.userpwd, {expires: 1, path: '/' });
                     $.cookie('cms', 'true', {expires: 1, path: '/' });
-                    window.location.href = 'http://localhost:3000/cms';
+                    window.location.href = '/cms/main';
                 }).fail(function(){
                     alert("登录失败！");
                     $.cookie('cms', 'false', {expires: 1, path: '/' });

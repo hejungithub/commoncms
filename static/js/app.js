@@ -17,14 +17,14 @@ angular.module('routeApp', [
             url:'/',
             views: {
                 'head': {
-                    templateUrl: '/static/views/head.html',
+                    templateUrl: '/cms/static/views/head.html',
                     controller: 'HeadController'
                 },
                 'ltnav': {
-                    templateUrl: '/static/views/ltnav.html'
+                    templateUrl: '/cms/static/views/ltnav.html'
                 },
                 'rtcontent': {
-                    templateUrl: '/static/views/rtcontent.html'
+                    templateUrl: '/cms/static/views/rtcontent.html'
                 }
             },
             resolve: {
@@ -36,7 +36,7 @@ angular.module('routeApp', [
             url:'search',
             views: {
                 'rtcontent@': {
-                    templateUrl: '/static/views/search.html'
+                    templateUrl: '/cms/static/views/search.html'
                 }
             }
         })
@@ -45,7 +45,7 @@ angular.module('routeApp', [
             url:'admin/info',
             views: {
                 'rtcontent@': {
-                    templateUrl: '/static/views/admininfo.html'
+                    templateUrl: '/cms/static/views/admininfo.html'
                 }
             }
         })
@@ -54,7 +54,7 @@ angular.module('routeApp', [
             url:'admin/change',
             views: {
                 'rtcontent@': {
-                    templateUrl: '/static/views/adminchange.html'
+                    templateUrl: '/cms/static/views/adminchange.html'
                 }
             }
         })
@@ -63,7 +63,7 @@ angular.module('routeApp', [
             url:'admin/control',
             views: {
                 'rtcontent@': {
-                    templateUrl: '/static/views/admincontrol.html'
+                    templateUrl: '/cms/static/views/admincontrol.html'
                 }
             }
         })
@@ -72,7 +72,7 @@ angular.module('routeApp', [
             url:'user/list',
             views: {
                 'rtcontent@': {
-                    templateUrl: '/static/views/userlist.html'
+                    templateUrl: '/cms/static/views/userlist.html'
                 }
             }
         })
@@ -81,7 +81,7 @@ angular.module('routeApp', [
             url:'user/list',
             views: {
                 'rtcontent@': {
-                    templateUrl: '/static/views/userother.html'
+                    templateUrl: '/cms/static/views/userother.html'
                 }
             }
         })
@@ -91,7 +91,7 @@ angular.module('routeApp', [
             url:'mt4/list',
             views: {
                 'rtcontent@': {
-                    templateUrl: '/static/views/mt4list.html'
+                    templateUrl: '/cms/static/views/mt4list.html'
                 }
             }
         })
@@ -100,7 +100,7 @@ angular.module('routeApp', [
             url:'mt4/han',
             views: {
                 'rtcontent@': {
-                    templateUrl: '/static/views/mt4han.html'
+                    templateUrl: '/cms/static/views/mt4han.html'
                 }
             }
         })
@@ -109,7 +109,7 @@ angular.module('routeApp', [
             url:'mt4/gen',
             views: {
                 'rtcontent@': {
-                    templateUrl: '/static/views/mt4gen.html'
+                    templateUrl: '/cms/static/views/mt4gen.html'
                 }
             }
         })
