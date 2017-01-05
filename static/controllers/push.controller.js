@@ -5,7 +5,7 @@ angular.module('controllers').controller('getAllMsgCtr', ['$http', '$scope', 'Pu
         $scope.msgs = GetAllMsg.content;
         $scope.size = GetAllMsg.size;
         $scope.maxSize = 5;
-        $scope.currentPage = GetAllMsg.number; //��ǰҳ
+        $scope.currentPage = GetAllMsg.number;
         $scope.totalItems = GetAllMsg.totalElements;
 
         $scope.pageChanged = function () {
