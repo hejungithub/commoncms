@@ -31,15 +31,15 @@ def main():
 @app.route("/login", methods=['POST'])
 def login():
     para = request.get_data().decode()
-    print(para)
-    return json.dumps(para)
+    pdict = json.loads(para)
+    return json.dumps(pdict)
 
 
 @app.route("/admin", methods=['POST'])
 def admininfo():
     para = request.get_data().decode()
-    print(para)
-    return json.dumps(para)
+    pdict = json.loads(para)
+    return json.dumps(pdict)
 
 
 @app.route("/user/all/<page>", methods=['GET'])

@@ -9,12 +9,13 @@ angular.module('services').factory('AdminService', ['$q', '$http',
                 var deferred = $q.defer();
                 $http.post('/cms/admin', JSON.stringify(para))
                     .then(function (res) {
+                        console.log(res);
                         if (res.data) {
-                            deferred.resolve(JSON.parse(res.data));
+                            deferred.resolve(res.data);
                         } else {
                             window.location.href = "/cms/"
                         }
-                    }, function () {
+                    }, function() {
                         deferred.reject();
                         window.location.href = "/cms/"
                     });
