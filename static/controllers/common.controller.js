@@ -3,10 +3,25 @@ angular.module('controllers').controller('HeadController', ['$http', '$rootScope
         'use strict';
         $rootScope.admin = Admin;
 
+        $rootScope.keyname = "";
+
         $rootScope.exit = function(){
             $.cookie('cms', 'false', {expires: 1, path: '/' });
             alert("注销登录");
             window.location.href = '/cms/';
+        }
+    }
+]);
+
+angular.module('controllers').controller('SearchController', ['$http', '$scope', 'SearchService',
+    function ($http, $scope, SearchService) {
+        'use strict';
+        $scope.dosearch = function(){
+            var pa = {
+                name : $scope.name,
+                tel : $scope.tel
+            };
+            SearchService.dosearch(pa);
         }
     }
 ]);
@@ -23,6 +38,11 @@ angular.module('controllers').controller('AdminChangeController', ['$http', '$ro
         'use strict';
 
         $scope.changepwd = function(){
+            if(typeof($scope.newpwd) == "undefined" || $scope.newpwd.trim() == ""){
+                alert("密码不能为空");
+                return;
+            }
+
             var para = {
                 name: $rootScope.admin.name,
                 password: $.md5($scope.newpwd)

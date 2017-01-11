@@ -51,6 +51,42 @@ angular.module('services').factory('AdminService', ['$q', '$http',
 
 
 
+
+/**
+ * search service func
+ *
+ * getSearchInfo
+ *
+ * */
+angular.module('services').factory('SearchService', ['$q', '$http',
+    function ($q, $http) {
+        return {
+            dosearch: function (para) {
+
+                /*var deferred = $q.defer();
+                $http.post('/cms/admin', JSON.stringify(para))
+                    .then(function (res) {
+                        if (res.data) {
+                            deferred.resolve(res.data);
+                        } else {
+                            window.location.href = "/cms/"
+                        }
+                    }, function() {
+                        deferred.reject();
+                        window.location.href = "/cms/"
+                    });
+
+                return deferred.promise;*/
+            }
+        };
+    }
+]);
+
+
+
+
+
+
 /**
  * nav service func
  *

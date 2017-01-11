@@ -39,7 +39,8 @@ angular.module('routeApp', [
             url:'search',
             views: {
                 'rtcontent@': {
-                    templateUrl: '/cms/static/views/search.html'
+                    templateUrl: '/cms/static/views/search.html',
+                    controller: 'SearchController'
                 }
             }
         })
