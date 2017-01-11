@@ -13,7 +13,7 @@ from db.model import User
 
 
 class InitDB:
-    engine = create_engine("mysql+pymysql://root:@localhost:3306/test?charset=utf8",
+    engine = create_engine("mysql+pymysql://root:@localhost:3306/qiao?charset=utf8",
                            encoding="utf-8", echo=True)
     DBSession = sessionmaker(bind=engine, )
     Base.metadata.create_all(bind=engine, )

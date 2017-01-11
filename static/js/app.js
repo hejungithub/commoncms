@@ -28,7 +28,7 @@ angular.module('routeApp', [
                 }
             },
             resolve: {
-                Admin: ['AdminService', function (resolve) { return resolve.getAdminInfo();}]
+                Admin: ['CommonService', function (resolve) { return resolve.getAdminInfo();}]
             }
         })
 
