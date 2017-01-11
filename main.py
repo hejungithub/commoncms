@@ -72,6 +72,17 @@ def navinfo():
     return json.dumps(obj)
 
 
+@app.route("/live/all/<page>", methods=['GET'])
+def live_all(page):
+    tmppage = int(page)
+    if tmppage > 0:
+        tmppage -= 1
+
+    obj = DAO.allive({'cur': tmppage})
+    obj['cur'] = page
+    return json.dumps(obj)
+
+
 @app.route("/user/all/<page>", methods=['GET'])
 def user_all(page):
     tmppage = int(page)

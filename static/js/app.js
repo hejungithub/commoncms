@@ -98,15 +98,18 @@ angular.module('routeApp', [
             }
         })
 
-        .state('home.userother', {
-            url:'user/list',
+        .state('home.livecourse', {
+            url:'course/live',
             views: {
                 'rtcontent@': {
-                    templateUrl: '/cms/static/views/userother.html'
+                    templateUrl: '/cms/static/views/livecourse.html',
+                    controller: 'LiveCourseController'
                 }
+            },
+            resolve: {
+                Lives: ['CourseService', function (resolve) { return resolve.getAllLive();}]
             }
         })
-
 
         .state('home.mt4list', {
             url:'mt4/list',

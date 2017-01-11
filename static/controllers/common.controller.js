@@ -136,3 +136,26 @@ angular.module('controllers').controller('UserEditController', ['$http', '$scope
         });
     }
 ]);
+
+
+
+angular.module('controllers').controller('LiveCourseController', ['$http', '$scope', 'CourseService', 'Lives',
+    function ($http, $scope, CourseService, Lives) {
+        'use strict';
+        $scope.lives = Lives.data;
+        $scope.size = Lives.persize;
+        $scope.currentPage = Lives.cur;
+        $scope.totalItems = Lives.total;
+        $scope.maxSize = 5;
+
+        $scope.pageChanged = function () {
+            CourseService.getAllLive($scope.currentPage).then(function (tmp) {
+                $scope.lives = tmp.data;
+                $scope.size = tmp.persize;
+                $scope.currentPage = tmp.cur;
+                $scope.totalItems = tmp.total;
+                $scope.maxSize = 5;
+            });
+        };
+    }
+]);

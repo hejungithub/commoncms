@@ -181,3 +181,71 @@ angular.module('services').factory('UserService', ['$q', '$http',
         };
     }
 ]);
+
+
+
+/**
+ *
+ * course service func
+ * */
+angular.module('services').factory('CourseService', ['$q', '$http',
+    function ($q, $http) {
+        return {
+            Lives:{},
+            getLiveRemote:function(id){
+                var deferred = $q.defer();
+                $http.get('/cms/live/get/' + id)
+                    .then(function (res) {
+                        if ($.isEmptyObject(res)) {
+                            deferred.reject();
+                        } else {
+                            deferred.resolve(res.data);
+                        }
+                    }, function() {
+                        deferred.reject();
+                        window.location.href = "/cms/"
+                    });
+                return deferred.promise;
+            },
+            getAllLive: function (datapage) {
+                if(!datapage){
+                    datapage = 0;
+                }
+                var deferred = $q.defer();
+                $http.get('/cms/live/all/' + datapage)
+                    .then(function (res) {
+                        if ($.isEmptyObject(res)) {
+                            deferred.reject();
+                        } else {
+                            Lives = res.data;
+                            deferred.resolve(res.data);
+                        }
+                    }, function() {
+                        deferred.reject();
+                        window.location.href = "/cms/"
+                    });
+
+                return deferred.promise;
+            },
+            getLiveById: function(ids){
+                var deferred = $q.defer();
+
+                if($.isEmptyObject(Lives)){
+                    this.getLiveRemote(ids).then(function(retdata){
+                        deferred.resolve(retdata);
+                    });
+                }else{
+                    var ret = null;
+                    $.each(Lives.data,function(idx,tmp){
+                        if(ids == tmp.id){
+                            ret = tmp;
+                        }
+                    });
+                    deferred.resolve(ret);
+                }
+
+                return deferred.promise;
+            }
+        };
+    }
+]);

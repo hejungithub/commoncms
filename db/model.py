@@ -55,6 +55,26 @@ class Admin(Base):
     password = Column(String(200))
 
 
+class HisCourse(Base):
+    __tablename__ = 'historycourse'
+    id = Column(Integer, primary_key=True)
+    content = Column(String(200))
+    lecturer = Column(String(200))
+    url = Column(String(200))
+    starttime = Column(DateTime)
+    endtime = Column(DateTime)
+
+
+class LiveCourse(Base):
+    __tablename__ = 'livecourse'
+    id = Column(Integer, primary_key=True)
+    content = Column(String(200))
+    lecturer = Column(String(200))
+    starttime = Column(DateTime)
+    endtime = Column(DateTime)
+
+
+
 class School(Base):
     __tablename__ = 'sch'
 
