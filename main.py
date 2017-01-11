@@ -44,7 +44,12 @@ def admininfo():
 
 @app.route("/user/all/<page>", methods=['GET'])
 def user_all(page):
-    obj = DAO.alluser({'cur': page})
+    tmppage = int(page)
+    if tmppage > 0:
+        tmppage -= 1
+
+    obj = DAO.alluser({'cur': tmppage})
+    obj['cur'] = page
     return json.dumps(obj)
 
 

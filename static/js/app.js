@@ -28,7 +28,7 @@ angular.module('routeApp', [
                 }
             },
             resolve: {
-                Admin: ['CommonService', function (resolve) { return resolve.getAdminInfo();}]
+                Admin: ['AdminService', function (resolve) { return resolve.getAdminInfo();}]
             }
         })
 
@@ -72,8 +72,12 @@ angular.module('routeApp', [
             url:'user/list',
             views: {
                 'rtcontent@': {
-                    templateUrl: '/cms/static/views/userlist.html'
+                    templateUrl: '/cms/static/views/userlist.html',
+                    controller: 'UserListController'
                 }
+            },
+            resolve: {
+                Users: ['UserService', function (resolve) { return resolve.getAllUser();}]
             }
         })
 

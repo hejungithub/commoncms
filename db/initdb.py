@@ -48,7 +48,8 @@ class InitDB:
                     'total': allsize,
                     'page': round(allsize / 10),
                     'cur': int(pdict['cur']),
-                    'data': self.listtodict(users)
+                    'data': self.listtodict(users),
+                    'persize': 10
                 }
                 ses.commit()
                 ses.close()

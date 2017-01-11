@@ -41,11 +41,14 @@ angular.module('services').factory('AdminService', ['$q', '$http',
 angular.module('services').factory('UserService', ['$q', '$http',
     function ($q, $http) {
         return {
-            getAllUser: function () {
+            allUsers:{},
+            getAllUser: function (datapage) {
+                if(!datapage){
+                    datapage = 0;
+                }
                 var deferred = $q.defer();
-                $http.post('/cms/admin', JSON.stringify(para))
+                $http.get('/cms/user/all/' + datapage)
                     .then(function (res) {
-                        console.log(res);
                         if (res.data) {
                             deferred.resolve(res.data);
                         } else {
