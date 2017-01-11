@@ -44,18 +44,17 @@
                     url:'/cms/login',
                     type:'POST',
                     data:JSON.stringify(para),
-                    timeout:5000, //超时时间
                     contentType: "application/json; charset=utf-8",
                     dataType:'json'
                 }).then(function(data){
-                    if(data.name==$.cookie('cmsuser')){
+                    if($.isEmptyObject(data)){
+                        alert("登录失败！");
+                        $.cookie('cms', 'false', {expires: 1, path: '/' });
+                    }else{
                         $.cookie('cmsuser', data.name, {expires: 1, path: '/' });
                         $.cookie('cmsupwd', data.password, {expires: 1, path: '/' });
                         $.cookie('cms', 'true', {expires: 1, path: '/' });
                         window.location.href = '/cms/main';
-                    }else{
-                        alert("登录失败！");
-                        $.cookie('cms', 'false', {expires: 1, path: '/' });
                     }
                 },function(){
                     alert("登录失败！");

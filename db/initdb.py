@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from sqlalchemy import create_engine, and_
+from sqlalchemy import create_engine, and_, or_
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import exc as sa_exc
 from db.model import Base, Admin, User
@@ -131,6 +131,33 @@ class InitDB:
             ses.close()
             return ret
         except sa_exc.NoResultFound:
+            ses.rollback()
+            ses.close()
+            return {}
+
+    def search(self, pdict):
+        ses = self.takeSes()
+        try:
+            ad = ses.query(User).filter(User.name.like('%' + pdict['name'] + '%')).limit(10).offset(
+                int(pdict['cur']) * 10).all()
+
+            alls = ses.query(User).filter(User.name.like('%' + pdict['name'] + '%')).all()
+            if len(ad) == 0:
+                raise BaseException
+            else:
+                allsize = len(alls)
+                ret = {
+                    'total': allsize,
+                    'page': round(allsize / 10),
+                    'cur': int(pdict['cur']),
+                    'data': self.listtodict(ad),
+                    'persize': 10
+                }
+                ses.commit()
+                ses.close()
+                return ret
+
+        except:
             ses.rollback()
             ses.close()
             return {}

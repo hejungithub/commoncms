@@ -15,14 +15,14 @@ angular.module('services').factory('AdminService', ['$q', '$http',
                 var deferred = $q.defer();
                 $http.post('/cms/admin', JSON.stringify(para))
                     .then(function (res) {
-                        if (res.data) {
-                            deferred.resolve(res.data);
-                        } else {
+                        if($.isEmptyObject(res)){
+                            deferred.reject();
                             window.location.href = "/cms/"
+                        }else{
+                            deferred.resolve(res.data);
                         }
                     }, function() {
                         deferred.reject();
-                        window.location.href = "/cms/"
                     });
 
                 return deferred.promise;
@@ -31,10 +31,10 @@ angular.module('services').factory('AdminService', ['$q', '$http',
                 var deferred = $q.defer();
                 $http.post('/cms/adminchange', JSON.stringify(pa))
                     .then(function (res) {
-                        if (res.data) {
-                            deferred.resolve(res.data);
-                        } else {
+                        if ($.isEmptyObject(res)) {
                             deferred.reject();
+                        } else {
+                            deferred.resolve(res.data);
                         }
                     }, function() {
                         deferred.reject();
@@ -63,20 +63,19 @@ angular.module('services').factory('SearchService', ['$q', '$http',
         return {
             dosearch: function (para) {
 
-                /*var deferred = $q.defer();
-                $http.post('/cms/admin', JSON.stringify(para))
+                var deferred = $q.defer();
+                $http.post('/cms/search', JSON.stringify(para))
                     .then(function (res) {
-                        if (res.data) {
-                            deferred.resolve(res.data);
+                        if ($.isEmptyObject(res)) {
+                            deferred.reject();
                         } else {
-                            window.location.href = "/cms/"
+                            deferred.resolve(res.data);
                         }
                     }, function() {
                         deferred.reject();
-                        window.location.href = "/cms/"
                     });
 
-                return deferred.promise;*/
+                return deferred.promise;
             }
         };
     }
@@ -100,10 +99,10 @@ angular.module('services').factory('NavService', ['$q', '$http',
                 var deferred = $q.defer();
                 $http.get('/cms/navinfo')
                     .then(function (res) {
-                        if (res.data) {
-                            deferred.resolve(res.data);
-                        } else {
+                        if ($.isEmptyObject(res)) {
                             window.location.href = "/cms/"
+                        } else {
+                            deferred.resolve(res.data);
                         }
                     }, function() {
                         deferred.reject();
@@ -129,10 +128,10 @@ angular.module('services').factory('UserService', ['$q', '$http',
                 var deferred = $q.defer();
                 $http.get('/cms/user/get/' + id)
                     .then(function (res) {
-                        if (res.data) {
-                            deferred.resolve(res.data);
+                        if ($.isEmptyObject(res)) {
+                            window.location.href = "/cms/";
                         } else {
-                            window.location.href = "/cms/"
+                            deferred.resolve(res.data);
                         }
                     }, function() {
                         deferred.reject();
@@ -147,11 +146,11 @@ angular.module('services').factory('UserService', ['$q', '$http',
                 var deferred = $q.defer();
                 $http.get('/cms/user/all/' + datapage)
                     .then(function (res) {
-                        if (res.data) {
+                        if ($.isEmptyObject(res)) {
+                            window.location.href = "/cms/"
+                        } else {
                             AllUsers = res.data;
                             deferred.resolve(res.data);
-                        } else {
-                            window.location.href = "/cms/"
                         }
                     }, function() {
                         deferred.reject();
@@ -163,7 +162,7 @@ angular.module('services').factory('UserService', ['$q', '$http',
             getUserById: function(ids){
                 var deferred = $q.defer();
 
-                if(typeof(AllUsers) == "undefined"){
+                if($.isEmptyObject(AllUsers)){
                     this.getUserRemote(ids).then(function(retdata){
                         deferred.resolve(retdata);
                     });

@@ -16,12 +16,50 @@ angular.module('controllers').controller('HeadController', ['$http', '$rootScope
 angular.module('controllers').controller('SearchController', ['$http', '$scope', 'SearchService',
     function ($http, $scope, SearchService) {
         'use strict';
+        $scope.name = "";
+        $scope.tel = "";
+
+        $scope.users = {};
+        $scope.size = {};
+        $scope.currentPage = 0;
+        $scope.totalItems = {};
+        $scope.maxSize = 5;
+
+        $scope.pageChanged = function () {
+            var pa = {
+                name : $scope.name,
+                tel : $scope.tel,
+                cur: $scope.currentPage
+            };
+            SearchService.dosearch(pa).then(function (tmp) {
+                if($.isEmptyObject(tmp)){
+                }else{
+                    $scope.users = tmp.data;
+                    $scope.size = tmp.persize;
+                    $scope.currentPage = tmp.cur;
+                    $scope.totalItems = tmp.total;
+                    $scope.maxSize = 5;
+                }
+            });
+        };
+
         $scope.dosearch = function(){
             var pa = {
                 name : $scope.name,
-                tel : $scope.tel
+                tel : $scope.tel,
+                cur : $scope.currentPage
             };
-            SearchService.dosearch(pa);
+            SearchService.dosearch(pa).then(function(tmp){
+                if($.isEmptyObject(tmp)){
+                }else{
+                    $scope.users = tmp.data;
+                    $scope.size = tmp.persize;
+                    $scope.currentPage = tmp.cur;
+                    $scope.totalItems = tmp.total;
+                    $scope.maxSize = 5;
+                }
+            },function(){
+            });
         }
     }
 ]);

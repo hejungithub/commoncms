@@ -52,6 +52,20 @@ def adminchange():
     return json.dumps(obj)
 
 
+@app.route("/search", methods=['POST'])
+def search():
+    para = request.get_data().decode()
+    ddict = json.loads(para)
+    pdict = json.loads(para)
+    tmppage = int(pdict['cur'])
+    if tmppage > 0:
+        tmppage -= 1
+    pdict['cur'] = tmppage
+    obj = DAO.search(pdict)
+    obj['cur'] = ddict['cur']
+    return json.dumps(obj)
+
+
 @app.route("/navinfo", methods=['GET'])
 def navinfo():
     obj = DAO.navinfo()
