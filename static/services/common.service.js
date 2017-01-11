@@ -1,3 +1,9 @@
+/**
+ * admin service func
+ *
+ * getAdminInfo
+ *
+ * */
 angular.module('services').factory('AdminService', ['$q', '$http',
     function ($q, $http) {
         return {
@@ -6,6 +12,36 @@ angular.module('services').factory('AdminService', ['$q', '$http',
                     'username': $.cookie('cmsuser'),
                     'userpwd': $.cookie('cmsupwd')
                 };
+                var deferred = $q.defer();
+                $http.post('/cms/admin', JSON.stringify(para))
+                    .then(function (res) {
+                        console.log(res);
+                        if (res.data) {
+                            deferred.resolve(res.data);
+                        } else {
+                            window.location.href = "/cms/"
+                        }
+                    }, function() {
+                        deferred.reject();
+                        window.location.href = "/cms/"
+                    });
+
+                return deferred.promise;
+            }
+        };
+    }
+]);
+
+
+
+/**
+ *
+ * user service func
+ * */
+angular.module('services').factory('UserService', ['$q', '$http',
+    function ($q, $http) {
+        return {
+            getAllUser: function () {
                 var deferred = $q.defer();
                 $http.post('/cms/admin', JSON.stringify(para))
                     .then(function (res) {
