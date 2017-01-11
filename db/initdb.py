@@ -1,11 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, and_
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import exc as sa_exc
-from db.model import Base
-from db.model import User
+from db.model import Base, Admin, User
 
 """
 模型操作模块，负责数据存储层
@@ -23,6 +22,33 @@ class InitDB:
 
     def __call__(self, **kwargs):
         pass
+
+    def getadmin(self, obj):
+        ses = self.takeSes()
+        try:
+            ad = ses.query(Admin).filter(and_(Admin.name == obj['username'],
+                                              Admin.password == obj['userpwd'])).one()
+            ret = ad.to_dict()
+            ses.close()
+            return ret
+        except sa_exc.NoResultFound:
+            ses.close()
+            return {}
+
+    def navinfo(self):
+        ses = self.takeSes()
+        try:
+            alls = ses.query(User).all()
+            ret = {
+                'users': len(alls)
+            }
+            ses.commit()
+            ses.close()
+            return ret
+        except:
+            ses.rollback()
+            ses.close()
+            return {}
 
     def listtodict(self, ret):
         des = []
@@ -90,6 +116,21 @@ class InitDB:
                 ses.close()
                 return ret
         except:
+            ses.rollback()
+            ses.close()
+            return {}
+
+    def changeadmin(self, obj):
+        ses = self.takeSes()
+        try:
+            ad = ses.query(Admin).filter(Admin.name == obj['name']).one()
+            ad.password = obj['password']
+            ret = ad.to_dict()
+
+            ses.commit()
+            ses.close()
+            return ret
+        except sa_exc.NoResultFound:
             ses.rollback()
             ses.close()
             return {}

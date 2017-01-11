@@ -47,6 +47,14 @@ class User(Base):
     createtime = Column(DateTime)
     updatetime = Column(DateTime)
 
+
+class Admin(Base):
+    __tablename__ = 'admin'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(200))
+    password = Column(String(200))
+
+
 class School(Base):
     __tablename__ = 'sch'
 

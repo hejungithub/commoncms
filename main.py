@@ -32,14 +32,30 @@ def main():
 def login():
     para = request.get_data().decode()
     pdict = json.loads(para)
-    return json.dumps(pdict)
+    obj = DAO.getadmin(pdict)
+    return json.dumps(obj)
 
 
 @app.route("/admin", methods=['POST'])
 def admininfo():
     para = request.get_data().decode()
     pdict = json.loads(para)
-    return json.dumps(pdict)
+    obj = DAO.getadmin(pdict)
+    return json.dumps(obj)
+
+
+@app.route("/adminchange", methods=['POST'])
+def adminchange():
+    para = request.get_data().decode()
+    pdict = json.loads(para)
+    obj = DAO.changeadmin(pdict)
+    return json.dumps(obj)
+
+
+@app.route("/navinfo", methods=['GET'])
+def navinfo():
+    obj = DAO.navinfo()
+    return json.dumps(obj)
 
 
 @app.route("/user/all/<page>", methods=['GET'])

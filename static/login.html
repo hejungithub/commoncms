@@ -47,12 +47,17 @@
                     timeout:5000, //超时时间
                     contentType: "application/json; charset=utf-8",
                     dataType:'json'
-                }).then(function(){
-                    $.cookie('cmsuser', para.username, {expires: 1, path: '/' });
-                    $.cookie('cmsupwd', para.userpwd, {expires: 1, path: '/' });
-                    $.cookie('cms', 'true', {expires: 1, path: '/' });
-                    window.location.href = '/cms/main';
-                }).fail(function(){
+                }).then(function(data){
+                    if(data.name==$.cookie('cmsuser')){
+                        $.cookie('cmsuser', data.name, {expires: 1, path: '/' });
+                        $.cookie('cmsupwd', data.password, {expires: 1, path: '/' });
+                        $.cookie('cms', 'true', {expires: 1, path: '/' });
+                        window.location.href = '/cms/main';
+                    }else{
+                        alert("登录失败！");
+                        $.cookie('cms', 'false', {expires: 1, path: '/' });
+                    }
+                },function(){
                     alert("登录失败！");
                     $.cookie('cms', 'false', {expires: 1, path: '/' });
                 })

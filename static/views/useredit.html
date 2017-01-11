@@ -1,0 +1,54 @@
+<div class="row" style="height:400px;">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <ol class="breadcrumb">
+                <li><a href="#" ui-sref="home">首页</a></li>
+                <li><a href="#" ui-sref="home.userlist">用户列表</a></li>
+                <li><a href="#" ui-sref="home.userdetail({id: user.id })">用户详情</a></li>
+                <li class="active">编辑</li>
+            </ol>
+        </div>
+        <div class="panel-body">
+            <form class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">用户名</label>
+                    <div class="col-sm-4">
+                        <input type="text" disabled class="form-control" value="{{user.name}}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">手机</label>
+                    <div class="col-sm-4">
+                        <input type="text" disabled class="form-control" value="{{user.tel}}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">昵称</label>
+                    <div class="col-sm-4">
+                        <input type="text" disabled class="form-control" value="{{user.nickname}}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">邮箱</label>
+                    <div class="col-sm-4">
+                        <input type="text" disabled class="form-control" value="{{user.mail}}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">创建日期</label>
+                    <div class="col-sm-4">
+                        <input type="text" disabled class="form-control" value="{{user.createtime}}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputPassword" class="col-sm-2 control-label">密码</label>
+                    <div class="col-sm-4">
+                        <input type="password" class="form-control" id="inputPassword" placeholder="请输入密码">
+                    </div>
+                </div>
+            </form>
+            <br/>
+            <br/>
+        </div>
+    </div>
+</div>

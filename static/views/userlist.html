@@ -1,24 +1,29 @@
 <div class="row" style="height:400px;">
     <div class="panel panel-default">
         <div class="panel-heading">
-            用户列表
+            <ol class="breadcrumb">
+                <li><a href="#" ui-sref="home">首页</a></li>
+                <li class="active">用户列表</li>
+            </ol>
         </div>
         <div class="panel-body">
             <table class="table table-striped">
                 <thead>
                 <tr>
                     <th>用户名</th>
-                    <th>昵称</th>
                     <th>手机</th>
+                    <th>昵称</th>
                     <th>邮箱</th>
+                    <th>创建日期</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr ng-repeat="u in users">
-                    <td>{{u.name}}</td>
+                    <td><a ui-sref="home.userdetail({id: u.id })">{{u.name}}</a></td>
                     <td>{{u.tel}}</td>
                     <td>{{u.nickname}}</td>
                     <td>{{u.mail}}</td>
+                    <td>{{u.createtime}}</td>
                 </tr>
                 </tbody>
             </table>

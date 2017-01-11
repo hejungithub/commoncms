@@ -21,14 +21,17 @@ angular.module('routeApp', [
                     controller: 'HeadController'
                 },
                 'ltnav': {
-                    templateUrl: '/cms/static/views/ltnav.html'
+                    templateUrl: '/cms/static/views/ltnav.html',
+                    controller: 'NavController'
                 },
                 'rtcontent': {
-                    templateUrl: '/cms/static/views/rtcontent.html'
+                    templateUrl: '/cms/static/views/rtcontent.html',
+                    controller: 'NavController'
                 }
             },
             resolve: {
-                Admin: ['AdminService', function (resolve) { return resolve.getAdminInfo();}]
+                Admin: ['AdminService', function (resolve) { return resolve.getAdminInfo();}],
+                Nav: ['NavService', function (resolve) { return resolve.getNavInfo();}]
             }
         })
 
@@ -50,23 +53,16 @@ angular.module('routeApp', [
             }
         })
 
-        .state('home.adminchange', {
-            url:'admin/change',
+        .state('home.adminedit', {
+            url:'admin/edit',
             views: {
                 'rtcontent@': {
-                    templateUrl: '/cms/static/views/adminchange.html'
+                    templateUrl: '/cms/static/views/adminedit.html',
+                    controller: 'AdminChangeController'
                 }
             }
         })
 
-        .state('home.admincontrol', {
-            url:'admin/control',
-            views: {
-                'rtcontent@': {
-                    templateUrl: '/cms/static/views/admincontrol.html'
-                }
-            }
-        })
 
         .state('home.userlist', {
             url:'user/list',
@@ -78,6 +74,26 @@ angular.module('routeApp', [
             },
             resolve: {
                 Users: ['UserService', function (resolve) { return resolve.getAllUser();}]
+            }
+        })
+
+        .state('home.userdetail', {
+            url:'user/detail/:id',
+            views: {
+                'rtcontent@': {
+                    templateUrl: '/cms/static/views/userdetail.html',
+                    controller: 'UserDetailController'
+                }
+            }
+        })
+
+        .state('home.useredit', {
+            url:'user/edit/:id',
+            views: {
+                'rtcontent@': {
+                    templateUrl: '/cms/static/views/useredit.html',
+                    controller: 'UserEditController'
+                }
             }
         })
 
