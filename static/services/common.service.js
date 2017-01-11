@@ -15,13 +15,13 @@ angular.module('services').factory('AdminService', ['$q', '$http',
                 var deferred = $q.defer();
                 $http.post('/cms/admin', JSON.stringify(para))
                     .then(function (res) {
-                        if($.isEmptyObject(res)){
+                        if ($.isEmptyObject(res)) {
                             deferred.reject();
                             window.location.href = "/cms/"
-                        }else{
+                        } else {
                             deferred.resolve(res.data);
                         }
-                    }, function() {
+                    }, function () {
                         deferred.reject();
                     });
 
@@ -36,7 +36,7 @@ angular.module('services').factory('AdminService', ['$q', '$http',
                         } else {
                             deferred.resolve(res.data);
                         }
-                    }, function() {
+                    }, function () {
                         deferred.reject();
                     });
 
@@ -45,11 +45,6 @@ angular.module('services').factory('AdminService', ['$q', '$http',
         };
     }
 ]);
-
-
-
-
-
 
 
 /**
@@ -71,7 +66,7 @@ angular.module('services').factory('SearchService', ['$q', '$http',
                         } else {
                             deferred.resolve(res.data);
                         }
-                    }, function() {
+                    }, function () {
                         deferred.reject();
                     });
 
@@ -80,10 +75,6 @@ angular.module('services').factory('SearchService', ['$q', '$http',
         };
     }
 ]);
-
-
-
-
 
 
 /**
@@ -104,7 +95,7 @@ angular.module('services').factory('NavService', ['$q', '$http',
                         } else {
                             deferred.resolve(res.data);
                         }
-                    }, function() {
+                    }, function () {
                         deferred.reject();
                         window.location.href = "/cms/"
                     });
@@ -123,8 +114,8 @@ angular.module('services').factory('NavService', ['$q', '$http',
 angular.module('services').factory('UserService', ['$q', '$http',
     function ($q, $http) {
         return {
-            AllUsers:{},
-            getUserRemote:function(id){
+            AllUsers: {},
+            getUserRemote: function (id) {
                 var deferred = $q.defer();
                 $http.get('/cms/user/get/' + id)
                     .then(function (res) {
@@ -133,14 +124,14 @@ angular.module('services').factory('UserService', ['$q', '$http',
                         } else {
                             deferred.resolve(res.data);
                         }
-                    }, function() {
+                    }, function () {
                         deferred.reject();
                         window.location.href = "/cms/"
                     });
                 return deferred.promise;
             },
             getAllUser: function (datapage) {
-                if(!datapage){
+                if (!datapage) {
                     datapage = 0;
                 }
                 var deferred = $q.defer();
@@ -152,24 +143,24 @@ angular.module('services').factory('UserService', ['$q', '$http',
                             AllUsers = res.data;
                             deferred.resolve(res.data);
                         }
-                    }, function() {
+                    }, function () {
                         deferred.reject();
                         window.location.href = "/cms/"
                     });
 
                 return deferred.promise;
             },
-            getUserById: function(ids){
+            getUserById: function (ids) {
                 var deferred = $q.defer();
 
-                if($.isEmptyObject(AllUsers)){
-                    this.getUserRemote(ids).then(function(retdata){
+                if ($.isEmptyObject(AllUsers)) {
+                    this.getUserRemote(ids).then(function (retdata) {
                         deferred.resolve(retdata);
                     });
-                }else{
+                } else {
                     var ret = null;
-                    $.each(AllUsers.data,function(idx,tmp){
-                        if(ids == tmp.id){
+                    $.each(AllUsers.data, function (idx, tmp) {
+                        if (ids == tmp.id) {
                             ret = tmp;
                         }
                     });
@@ -183,7 +174,6 @@ angular.module('services').factory('UserService', ['$q', '$http',
 ]);
 
 
-
 /**
  *
  * course service func
@@ -191,8 +181,9 @@ angular.module('services').factory('UserService', ['$q', '$http',
 angular.module('services').factory('CourseService', ['$q', '$http',
     function ($q, $http) {
         return {
-            Lives:{},
-            getLiveRemote:function(id){
+            Lives: {},
+            His: {},
+            getLiveRemote: function (id) {
                 var deferred = $q.defer();
                 $http.get('/cms/live/get/' + id)
                     .then(function (res) {
@@ -201,14 +192,34 @@ angular.module('services').factory('CourseService', ['$q', '$http',
                         } else {
                             deferred.resolve(res.data);
                         }
-                    }, function() {
+                    }, function () {
                         deferred.reject();
                         window.location.href = "/cms/"
                     });
                 return deferred.promise;
             },
+            getAllHis: function (datapage) {
+                if (!datapage) {
+                    datapage = 0;
+                }
+                var deferred = $q.defer();
+                $http.get('/cms/his/all/' + datapage)
+                    .then(function (res) {
+                        if ($.isEmptyObject(res)) {
+                            deferred.reject();
+                        } else {
+                            His = res.data;
+                            deferred.resolve(res.data);
+                        }
+                    }, function () {
+                        deferred.reject();
+                        window.location.href = "/cms/"
+                    });
+
+                return deferred.promise;
+            },
             getAllLive: function (datapage) {
-                if(!datapage){
+                if (!datapage) {
                     datapage = 0;
                 }
                 var deferred = $q.defer();
@@ -220,24 +231,24 @@ angular.module('services').factory('CourseService', ['$q', '$http',
                             Lives = res.data;
                             deferred.resolve(res.data);
                         }
-                    }, function() {
+                    }, function () {
                         deferred.reject();
                         window.location.href = "/cms/"
                     });
 
                 return deferred.promise;
             },
-            getLiveById: function(ids){
+            getLiveById: function (ids) {
                 var deferred = $q.defer();
 
-                if($.isEmptyObject(Lives)){
-                    this.getLiveRemote(ids).then(function(retdata){
+                if ($.isEmptyObject(Lives)) {
+                    this.getLiveRemote(ids).then(function (retdata) {
                         deferred.resolve(retdata);
                     });
-                }else{
+                } else {
                     var ret = null;
-                    $.each(Lives.data,function(idx,tmp){
-                        if(ids == tmp.id){
+                    $.each(Lives.data, function (idx, tmp) {
+                        if (ids == tmp.id) {
                             ret = tmp;
                         }
                     });

@@ -111,6 +111,19 @@ angular.module('routeApp', [
             }
         })
 
+        .state('home.hiscourse', {
+            url:'course/his',
+            views: {
+                'rtcontent@': {
+                    templateUrl: '/cms/static/views/hiscourse.html',
+                    controller: 'HisCourseController'
+                }
+            },
+            resolve: {
+                Hiss: ['CourseService', function (resolve) { return resolve.getAllHis();}]
+            }
+        })
+
         .state('home.mt4list', {
             url:'mt4/list',
             views: {

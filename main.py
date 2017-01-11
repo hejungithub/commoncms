@@ -83,6 +83,17 @@ def live_all(page):
     return json.dumps(obj)
 
 
+@app.route("/his/all/<page>", methods=['GET'])
+def his_all(page):
+    tmppage = int(page)
+    if tmppage > 0:
+        tmppage -= 1
+
+    obj = DAO.allhis({'cur': tmppage})
+    obj['cur'] = page
+    return json.dumps(obj)
+
+
 @app.route("/user/all/<page>", methods=['GET'])
 def user_all(page):
     tmppage = int(page)

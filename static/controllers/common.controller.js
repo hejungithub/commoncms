@@ -159,3 +159,28 @@ angular.module('controllers').controller('LiveCourseController', ['$http', '$sco
         };
     }
 ]);
+
+
+
+angular.module('controllers').controller('HisCourseController', ['$http', '$scope', 'CourseService', 'Hiss',
+    function ($http, $scope, CourseService, Hiss) {
+        'use strict';
+        $scope.hiss = Hiss.data;
+        $scope.size = Hiss.persize;
+        $scope.currentPage = Hiss.cur;
+        $scope.totalItems = Hiss.total;
+        $scope.maxSize = 5;
+
+        $scope.pageChanged = function () {
+            CourseService.getAllHis($scope.currentPage).then(function (tmp) {
+                $scope.hiss = tmp.data;
+                $scope.size = tmp.persize;
+                $scope.currentPage = tmp.cur;
+                $scope.totalItems = tmp.total;
+                $scope.maxSize = 5;
+            });
+        };
+    }
+]);
+
+

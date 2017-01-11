@@ -4,7 +4,7 @@
 from sqlalchemy import create_engine, and_, or_
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import exc as sa_exc
-from db.model import Base, Admin, User, LiveCourse
+from db.model import Base, Admin, User, LiveCourse, HisCourse
 
 """
 模型操作模块，负责数据存储层
@@ -40,9 +40,11 @@ class InitDB:
         try:
             alls = ses.query(User).all()
             lives = ses.query(LiveCourse).all()
+            hiss = ses.query(HisCourse).all()
             ret = {
                 'users': len(alls),
-                'lives': len(lives)
+                'lives': len(lives),
+                'hiss': len(hiss)
             }
             ses.commit()
             ses.close()
@@ -169,6 +171,31 @@ class InitDB:
         try:
             curs = ses.query(LiveCourse).limit(10).offset(int(pdict['cur']) * 10).all()
             alls = ses.query(LiveCourse).all()
+            if len(curs) == 0:
+                raise BaseException
+            else:
+                allsize = len(alls)
+                ret = {
+                    'total': allsize,
+                    'page': round(allsize / 10),
+                    'cur': int(pdict['cur']),
+                    'data': self.listtodict(curs),
+                    'persize': 10
+                }
+                ses.commit()
+                ses.close()
+                return ret
+
+        except:
+            ses.rollback()
+            ses.close()
+            return {}
+
+    def allhis(self, pdict):
+        ses = self.takeSes()
+        try:
+            curs = ses.query(HisCourse).limit(10).offset(int(pdict['cur']) * 10).all()
+            alls = ses.query(HisCourse).all()
             if len(curs) == 0:
                 raise BaseException
             else:
