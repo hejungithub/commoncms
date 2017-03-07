@@ -7,6 +7,7 @@ import json
 from flask import request
 from flask import Flask
 from db import initdb
+from db import model
 
 app = Flask(__name__)
 
@@ -52,56 +53,9 @@ def adminchange():
     return json.dumps(obj)
 
 
-@app.route("/search", methods=['POST'])
-def search():
-    para = request.get_data().decode()
-    ddict = json.loads(para)
-    pdict = json.loads(para)
-    tmppage = int(pdict['cur'])
-    if tmppage > 0:
-        tmppage -= 1
-    pdict['cur'] = tmppage
-    obj = DAO.search(pdict)
-    obj['cur'] = ddict['cur']
-    return json.dumps(obj)
-
-
 @app.route("/navinfo", methods=['GET'])
 def navinfo():
     obj = DAO.navinfo()
-    return json.dumps(obj)
-
-
-@app.route("/live/all/<page>", methods=['GET'])
-def live_all(page):
-    tmppage = int(page)
-    if tmppage > 0:
-        tmppage -= 1
-
-    obj = DAO.allive({'cur': tmppage})
-    obj['cur'] = page
-    return json.dumps(obj)
-
-
-@app.route("/his/all/<page>", methods=['GET'])
-def his_all(page):
-    tmppage = int(page)
-    if tmppage > 0:
-        tmppage -= 1
-
-    obj = DAO.allhis({'cur': tmppage})
-    obj['cur'] = page
-    return json.dumps(obj)
-
-
-@app.route("/user/all/<page>", methods=['GET'])
-def user_all(page):
-    tmppage = int(page)
-    if tmppage > 0:
-        tmppage -= 1
-
-    obj = DAO.alluser({'cur': tmppage})
-    obj['cur'] = page
     return json.dumps(obj)
 
 
@@ -119,6 +73,40 @@ def user_get(uid):
     finally:
         logger.warning("warn1")
 
+
+# search service
+
+
+@app.route("/search", methods=['POST'])
+def search():
+    para = request.get_data().decode()
+    ddict = json.loads(para)
+    pdict = json.loads(para)
+    tmppage = int(pdict['cur'])
+    if tmppage > 0:
+        tmppage -= 1
+    pdict['cur'] = tmppage
+    obj = DAO.search(pdict)
+    obj['cur'] = ddict['cur']
+    return json.dumps(obj)
+
+# all record & pageable
+# live & his & user entity
+
+
+@app.route("/live/all/<page>", methods=['GET'])
+def live_all(page):
+    return DAO.allRecord(page, model.LiveCourse)
+
+
+@app.route("/his/all/<page>", methods=['GET'])
+def his_all(page):
+    return DAO.allRecord(page, model.HisCourse)
+
+
+@app.route("/user/all/<page>", methods=['GET'])
+def user_all(page):
+    return DAO.allRecord(page, model.User)
 
 if __name__ == "__main__":
     app.run(host='127.0.0.1', port=3000, debug=True)

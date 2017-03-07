@@ -6,11 +6,13 @@ from sqlalchemy.ext.declarative import declarative_base
 增加转化json对象处理
 """
 
+
 def convert_datetime(value):
     if value:
         return value.strftime("%Y-%m-%d %H:%M:%S")
     else:
         return ""
+
 
 def to_dict(self):
     ret = {}
@@ -44,6 +46,7 @@ class User(Base):
     qiaomoney = Column(String(200))
     photo = Column(String(200))
     mail = Column(String(200))
+    testname = Column(String(200))
     createtime = Column(DateTime)
     updatetime = Column(DateTime)
 
@@ -72,7 +75,6 @@ class LiveCourse(Base):
     lecturer = Column(String(200))
     starttime = Column(DateTime)
     endtime = Column(DateTime)
-
 
 
 class School(Base):
