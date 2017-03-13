@@ -11,19 +11,21 @@
                 <thead>
                 <tr>
                     <th>用户名</th>
-                    <th>手机</th>
                     <th>昵称</th>
-                    <th>邮箱</th>
+                    <th>手机</th>
                     <th>创建日期</th>
+                    <th>奇傲币</th>
+                    <th>奖金</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr ng-repeat="u in users">
                     <td><a ui-sref="home.userdetail({id: u.id })">{{u.name}}</a></td>
-                    <td>{{u.tel}}</td>
                     <td>{{u.nickname}}</td>
-                    <td>{{u.mail}}</td>
+                    <td>{{u.tel}}</td>
                     <td>{{u.createtime}}</td>
+                    <td>{{u.qiaomoney}}</td>
+                    <td>{{u.money}}</td>
                 </tr>
                 </tbody>
             </table>

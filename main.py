@@ -3,11 +3,14 @@
 import logging
 import logging.config
 import json
+import urllib.request
+import urllib.response
+import urllib.parse
 
 from flask import request
 from flask import Flask
-from db import initdb
-from db import model
+from webapp import dbtool
+from webapp import model
 
 app = Flask(__name__)
 
@@ -16,69 +19,114 @@ logging.config.fileConfig("logger.conf")
 logger = logging.getLogger("example02")
 
 # db
-DAO = initdb.InitDB()
+DAO = dbtool.DataDB()
 
 
 @app.route("/", methods=['GET'])
-def mav():
+def login_html():
     return app.send_static_file('login.html')
 
 
 @app.route("/main", methods=['GET'])
-def main():
+def cms_html():
     return app.send_static_file('cms.html')
 
 
 @app.route("/login", methods=['POST'])
-def login():
+def act_login():
     para = request.get_data().decode()
     pdict = json.loads(para)
-    obj = DAO.getadmin(pdict)
-    return json.dumps(obj)
+    return json.dumps(DAO.get_admin(pdict))
 
 
 @app.route("/admin", methods=['POST'])
-def admininfo():
+def act_admin_info():
     para = request.get_data().decode()
     pdict = json.loads(para)
-    obj = DAO.getadmin(pdict)
-    return json.dumps(obj)
+    return json.dumps(DAO.get_admin(pdict))
 
 
 @app.route("/adminchange", methods=['POST'])
-def adminchange():
+def act_admin_change():
     para = request.get_data().decode()
     pdict = json.loads(para)
-    obj = DAO.changeadmin(pdict)
-    return json.dumps(obj)
+    return json.dumps(DAO.changeadmin(pdict))
 
 
 @app.route("/navinfo", methods=['GET'])
-def navinfo():
-    obj = DAO.navinfo()
-    return json.dumps(obj)
+def act_nav_info():
+    return json.dumps(DAO.nav_info())
 
 
 @app.route("/user/add/<uname>", methods=['GET'])
-def user_add(uname):
-    obj = DAO.addUser(uname)
-    return json.dumps(obj)
+def act_user_add(uname):
+    return json.dumps(DAO.addUser(uname))
 
 
 @app.route("/user/get/<uid>", methods=['GET'])
-def user_get(uid):
+def act_user_get(uid):
     try:
-        obj = DAO.getUser(uid)
+        return json.dumps(DAO.getUser(uid))
+    finally:
+        logger.warning("warn1")
+
+
+@app.route("/mt4strategy/get/<uid>", methods=['GET'])
+def act_mt4strategy_get(uid):
+    try:
+        obj = DAO.getMt4Strategy(uid)
+        mt4ids = ''
+        for tmp in obj:
+            mt4ids = tmp['mt4id']
+
+        paradata = {'mt4idlist': mt4ids}
+
+        if paradata['mt4idlist']:
+            ret = http_get(paradata)
+        else:
+            ret = {}
+
+        return json.dumps(ret)
+    finally:
+        logger.warning("warn1")
+
+
+@app.route("/mt4recommend/all/<page>", methods=['GET'])
+def act_mt4recommend_get_all(page):
+    try:
+        obj = DAO.allRecordMT4Recommend(page)
+        if getattr(obj, 'data', None):
+            mt4ids = ''
+            for tmp in obj['data']:
+                mt4ids = tmp['mt4id']
+                mt4ids += ','
+            mt4ids = mt4ids[:-1]
+            paradata = {'mt4idlist': mt4ids}
+
+            if getattr(paradata, 'mt4idlist', None):
+                ret = http_get(paradata)
+            else:
+                ret = {}
+
+            obj['data'] = ret['data']
+
         return json.dumps(obj)
     finally:
         logger.warning("warn1")
 
 
+@app.route("/mt4strategy/save", methods=['POST'])
+def act_mt4recommend_save():
+    para = request.get_data().decode()
+    pdict = json.loads(para)
+    obj = DAO.addMT4recommend(pdict)
+    return json.dumps(obj)
+
 # search service
 
 
 @app.route("/search", methods=['POST'])
-def search():
+def act_user_search():
     para = request.get_data().decode()
     ddict = json.loads(para)
     pdict = json.loads(para)
@@ -90,23 +138,45 @@ def search():
     obj['cur'] = ddict['cur']
     return json.dumps(obj)
 
+
 # all record & pageable
 # live & his & user entity
 
 
 @app.route("/live/all/<page>", methods=['GET'])
-def live_all(page):
-    return DAO.allRecord(page, model.LiveCourse)
+def act_live_get_all(page):
+    return json.dumps(DAO.allRecord(page, model.LiveCourse))
 
 
 @app.route("/his/all/<page>", methods=['GET'])
-def his_all(page):
-    return DAO.allRecord(page, model.HisCourse)
+def act_his_get_all(page):
+    return json.dumps(DAO.allRecord(page, model.HisCourse))
 
 
 @app.route("/user/all/<page>", methods=['GET'])
-def user_all(page):
-    return DAO.allRecord(page, model.User)
+def act_user_get_all(page):
+    return json.dumps(DAO.allRecord(page, model.User))
+
+
+@app.route("/mt4strategy/all/<page>", methods=['GET'])
+def act_mt4strategy_get_all(page):
+    return json.dumps(DAO.allRecordMT4(page))
+
+
+def http_get(para):
+    para = json.dumps(para, separators=(',', ':'))
+    para = '''action=MT4listInfo&json=''' + para
+    print(para)
+    para = 'http://118.178.95.73/Bonanza/Mt4Interface.ashx?' + para
+
+    req = urllib.request.Request(method='GET',
+                                 url=para)
+    resp = urllib.request.urlopen(req)
+    ret = resp.read().decode()
+    ret = json.loads(ret)
+    print(ret)
+    return ret
+
 
 if __name__ == "__main__":
     app.run(host='127.0.0.1', port=3000, debug=True)

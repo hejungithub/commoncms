@@ -113,8 +113,8 @@ angular.module('services').factory('NavService', ['$q', '$http',
  * */
 angular.module('services').factory('UserService', ['$q', '$http',
     function ($q, $http) {
+        var AllUsers = {};
         return {
-            AllUsers: {},
             getUserRemote: function (id) {
                 var deferred = $q.defer();
                 $http.get('/cms/user/get/' + id)
@@ -166,6 +166,80 @@ angular.module('services').factory('UserService', ['$q', '$http',
                     });
                     deferred.resolve(ret);
                 }
+                return deferred.promise;
+            },
+            getMt4strategyById: function(id) {
+                var deferred = $q.defer();
+                $http.get('/cms/mt4strategy/get/' + id)
+                    .then(function (res) {
+                        if ($.isEmptyObject(res)) {
+                            window.location.href = "/cms/";
+                        } else {
+                            deferred.resolve(res.data.data);
+                        }
+                    }, function () {
+                        deferred.reject();
+                        window.location.href = "/cms/"
+                    });
+                return deferred.promise;
+            },
+            getMt4strategyAll: function (datapage) {
+                if (!datapage) {
+                    datapage = 0;
+                }
+                var deferred = $q.defer();
+                $http.get('/cms/mt4strategy/all/' + datapage)
+                    .then(function (res) {
+                        if ($.isEmptyObject(res)) {
+                            deferred.reject();
+                        } else {
+                            deferred.resolve(res.data);
+                        }
+                    }, function () {
+                        deferred.reject();
+                        window.location.href = "/cms/"
+                    });
+
+                return deferred.promise;
+            },
+            saveMt4recommend: function (obj) {
+                var para = {
+                    'uid': obj.uid,
+                    'uname': obj.name,
+                    'mt4id': obj.mt4id
+                };
+
+                var deferred = $q.defer();
+                $http.post('/cms/mt4strategy/save', JSON.stringify(para))
+                    .then(function (res) {
+                        if ($.isEmptyObject(res)) {
+                            deferred.reject();
+                            window.location.href = "/cms/"
+                        } else {
+                            deferred.resolve(res.data);
+                        }
+                    }, function () {
+                        deferred.reject();
+                    });
+
+                return deferred.promise;
+            },
+            getMt4Recommend: function (datapage) {
+                if (!datapage) {
+                    datapage = 0;
+                }
+                var deferred = $q.defer();
+                $http.get('/cms/mt4recommend/all/' + datapage)
+                    .then(function (res) {
+                        if ($.isEmptyObject(res)) {
+                            deferred.reject();
+                        } else {
+                            deferred.resolve(res.data);
+                        }
+                    }, function () {
+                        deferred.reject();
+                        window.location.href = "/cms/"
+                    });
 
                 return deferred.promise;
             }

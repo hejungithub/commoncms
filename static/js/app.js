@@ -150,4 +150,18 @@ angular.module('routeApp', [
                 }
             }
         })
+
+        .state('home.mt4recommend', {
+            url:'mt4/recommend',
+            views: {
+                'rtcontent@': {
+                    templateUrl: '/cms/static/views/mt4recommend.html',
+                    controller: 'MT4recommendController'
+                }
+            },
+            resolve: {
+                MT4: ['UserService', function (resolve) { return resolve.getMt4strategyAll();}],
+                MT4RECOMMEND: ['UserService', function (resolve) { return resolve.getMt4Recommend();}]
+            }
+        })
 }]);

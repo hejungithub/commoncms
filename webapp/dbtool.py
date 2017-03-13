@@ -1,17 +1,17 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from sqlalchemy import create_engine, and_, or_
+from sqlalchemy import create_engine, and_
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import exc as sa_exc
-from db.model import Base, Admin, User, LiveCourse, HisCourse
-import json
+from webapp.model import Base, Admin, User, LiveCourse, HisCourse, MT4strategy, MT4recommend
+
 """
 模型操作模块，负责数据存储层
 """
 
 
-class InitDB:
+class DataDB:
     engine = create_engine("mysql+pymysql://root:@localhost:3306/qiao?charset=utf8",
                            encoding="utf-8", echo=True)
     DBSession = sessionmaker(bind=engine, )
@@ -23,7 +23,7 @@ class InitDB:
     def __call__(self, **kwargs):
         pass
 
-    def getadmin(self, obj):
+    def get_admin(self, obj):
         ses = self.takeSes()
         try:
             ad = ses.query(Admin).filter(
@@ -37,7 +37,7 @@ class InitDB:
             ses.close()
             return {}
 
-    def navinfo(self):
+    def nav_info(self):
         ses = self.takeSes()
         try:
             alls = ses.query(User).all()
@@ -63,8 +63,20 @@ class InitDB:
 
         return des
 
+    def list2todict(self, ret):
+        des = []
+        for result in ret:
+            if isinstance(result, tuple):
+                tmpret = {}
+                for tmp in result:
+                    tmpret.update(tmp.to_dict())
+                des.append(tmpret)
+            else:
+                pass
+        return des
+
     def takeSes(self):
-        session = InitDB.DBSession()
+        session = DataDB.DBSession()
         return session
 
     def getUser(self, uid):
@@ -119,10 +131,9 @@ class InitDB:
     def search(self, pdict):
         ses = self.takeSes()
         try:
-            ad = ses.query(User).filter(User.name.like('%' + pdict['name'] + '%')) \
-                .limit(10).offset(int(pdict['cur']) * 10).all()
-
-            alls = ses.query(User).filter(User.name.like('%' + pdict['name'] + '%')).all()
+            query = ses.query(User).filter(User.name.like('%' + pdict['name'] + '%'))
+            ad = query.limit(10).offset(int(pdict['cur']) * 10).all()
+            alls = query.all()
             if len(ad) == 0:
                 raise BaseException
             else:
@@ -143,9 +154,6 @@ class InitDB:
             ses.close()
             return {}
 
-    '''
-
-    '''
     def allRecord(self, page, entity):
         tmppage = int(page)
         if tmppage > 0:
@@ -168,7 +176,106 @@ class InitDB:
                 }
                 ses.commit()
                 ses.close()
-                return json.dumps(ret)
+                return ret
+
+        except:
+            ses.rollback()
+            ses.close()
+            return {}
+
+    def allRecordMT4(self, page):
+        tmppage = int(page)
+        if tmppage > 0:
+            tmppage -= 1
+
+        ses = self.takeSes()
+        try:
+            query = ses.query(User, MT4strategy).filter(User.id == MT4strategy.uid)
+            subquery = ses.query(MT4recommend.mt4id)
+
+            rets = query.filter(MT4strategy.mt4id.notin_(subquery)) \
+                .limit(10).offset(tmppage * 10).all()
+
+            alls = query.filter(MT4strategy.mt4id.notin_(subquery)).all()
+
+            if len(rets) == 0:
+                raise BaseException
+            else:
+                allsize = len(alls)
+                ret = {
+                    'total': allsize,
+                    'page': round(allsize / 10),
+                    'cur': page,
+                    'data': self.list2todict(rets),
+                    'persize': 10
+                }
+                ses.commit()
+                ses.close()
+                return ret
+
+        except:
+            ses.rollback()
+            ses.close()
+            return {}
+
+    def getMt4Strategy(self, uid):
+        ses = self.takeSes()
+        try:
+            mt4stra = ses.query(MT4strategy).filter(MT4strategy.uid == uid).all()
+            ret = self.listtodict(mt4stra)
+            ses.close()
+            return ret
+
+        except sa_exc.NoResultFound:
+            ses.close()
+            return {}
+
+    def addMT4recommend(self, obj):
+        ses = self.takeSes()
+        new_mt4 = MT4recommend()
+        new_mt4.mt4id = obj['mt4id']
+        new_mt4.uid = obj['uid']
+        new_mt4.uname = obj['uname']
+        try:
+            # 添加到session:
+            ses.add(new_mt4)
+            ret = new_mt4.to_dict()
+            ses.commit()
+            ses.close()
+            return ret
+
+        except:
+            ses.rollback()
+            ses.close()
+            return {}
+
+    def allRecordMT4Recommend(self, page):
+        tmppage = int(page)
+        if tmppage > 0:
+            tmppage -= 1
+
+        ses = self.takeSes()
+        try:
+            query = ses.query(MT4recommend).filter(MT4recommend.id != -1)
+
+            rets = query.limit(10).offset(tmppage * 10).all()
+
+            alls = query.all()
+
+            if len(rets) == 0:
+                raise BaseException
+            else:
+                allsize = len(alls)
+                ret = {
+                    'total': allsize,
+                    'page': round(allsize / 10),
+                    'cur': page,
+                    'data': self.listtodict(rets),
+                    'persize': 10
+                }
+                ses.commit()
+                ses.close()
+                return ret
 
         except:
             ses.rollback()

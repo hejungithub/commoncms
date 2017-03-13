@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, Numeric
+from sqlalchemy import Column, Integer, Float, String, DateTime, Numeric
 from sqlalchemy.ext.declarative import declarative_base
 
 """
@@ -37,17 +37,16 @@ class User(Base):
     __tablename__ = 'user'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(200))
-    password = Column(String(200))
-    tel = Column(String(200))
-    nickname = Column(String(200))
     clicks = Column(Integer)
-    money = Column(String(200))
-    qiaomoney = Column(String(200))
-    photo = Column(String(200))
-    mail = Column(String(200))
-    testname = Column(String(200))
     createtime = Column(DateTime)
+    mail = Column(String(200))
+    money = Column(String(200))
+    name = Column(String(200))
+    nickname = Column(String(200))
+    password = Column(String(200))
+    photo = Column(String(200))
+    qiaomoney = Column(Float)
+    tel = Column(String(200))
     updatetime = Column(DateTime)
 
 
@@ -77,8 +76,17 @@ class LiveCourse(Base):
     endtime = Column(DateTime)
 
 
-class School(Base):
-    __tablename__ = 'sch'
-
+class MT4strategy(Base):
+    __tablename__ = 'mt4strategy'
     id = Column(Integer, primary_key=True)
-    name = Column(String(200))
+    uid = Column(Integer)
+    mt4id = Column(String(200))
+    createtime = Column(DateTime)
+
+
+class MT4recommend(Base):
+    __tablename__ = 'mt4recommend'
+    id = Column(Integer, primary_key=True)
+    uid = Column(Integer)
+    uname = Column(String(200))
+    mt4id = Column(String(200))
