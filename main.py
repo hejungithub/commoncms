@@ -75,17 +75,16 @@ def act_user_get(uid):
 def act_mt4strategy_get(uid):
     try:
         obj = DAO.getMt4Strategy(uid)
+
         mt4ids = ''
         for tmp in obj:
             mt4ids += tmp['mt4id']
             mt4ids += ','
 
-        mt4ids = mt4ids[:-1]
-
-        paradata = {'mt4idlist': mt4ids}
+        paradata = {'mt4idlist': mt4ids[:-1]}
 
         if paradata['mt4idlist']:
-            ret = http_get('action=MT4listInfo', paradata)
+            ret = service_api('action=MT4listInfo', paradata)
         else:
             ret = {}
 
@@ -98,7 +97,7 @@ def act_mt4strategy_get(uid):
 def act_mt4recommend_get_all(page):
     try:
         ret = []
-        getret = http_get('action=SelInsideList', {"name": "", "sr": "0", "sort": "1"})
+        getret = service_api('action=SelInsideList', {"name": "", "sr": "0", "sort": "1"})
         if getret:
             obj = DAO.allRecordMT4Recommend(page)
             for tmp in obj['data']:
@@ -118,7 +117,7 @@ def act_mt4recommend_save():
     pdict = json.loads(para)
     obj = DAO.addMT4recommend(pdict)
     if obj:
-        upret = http_get('action=UpdateInside', {"mt4id": obj['mt4id'], "innerAccount": "1"})
+        upret = service_api('action=UpdateInside', {"mt4id": obj['mt4id'], "innerAccount": "1"})
         if getattr(upret, 'errMsg', None):
             return json.dumps(obj)
         else:
@@ -168,23 +167,19 @@ def act_mt4strategy_get_all(page):
     return json.dumps(DAO.allRecordMT4(page))
 
 
-def http_get(act, para):
+def service_api(act, para):
     para = json.dumps(para, separators=(',', ':'))
     para = act + '''&json=''' + para
-    print(para)
     para = 'http://118.178.95.73/Bonanza/Mt4Interface.ashx?' + para
-
-    req = urllib.request.Request(method='GET',
-                                 url=para)
+    print(para)
+    req = urllib.request.Request(method='GET', url=para)
     resp = urllib.request.urlopen(req)
     ret = resp.read().decode()
-    ret = json.loads(ret)
 
     while str == type(ret):
         ret = json.loads(ret)
 
     return ret
-
 
 if __name__ == "__main__":
     app.run(host='127.0.0.1', port=3000, debug=True)
