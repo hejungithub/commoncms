@@ -4,7 +4,7 @@
 from sqlalchemy import create_engine, and_
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import exc as sa_exc
-from webapp.model import Base, Admin, User, LiveCourse, HisCourse, MT4strategy, MT4recommend
+from app.model import Base, Admin, User, LiveCourse, HisCourse, MT4strategy, MT4recommend
 
 """
 模型操作模块，负责数据存储层

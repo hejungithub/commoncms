@@ -9,8 +9,8 @@ import urllib.parse
 
 from flask import request
 from flask import Flask
-from webapp import dbtool
-from webapp import model
+from app import dbtool
+from app import model
 
 app = Flask(__name__)
 
@@ -77,12 +77,15 @@ def act_mt4strategy_get(uid):
         obj = DAO.getMt4Strategy(uid)
         mt4ids = ''
         for tmp in obj:
-            mt4ids = tmp['mt4id']
+            mt4ids += tmp['mt4id']
+            mt4ids += ','
+
+        mt4ids = mt4ids[:-1]
 
         paradata = {'mt4idlist': mt4ids}
 
         if paradata['mt4idlist']:
-            ret = http_get(paradata)
+            ret = http_get('action=MT4listInfo', paradata)
         else:
             ret = {}
 
@@ -94,23 +97,17 @@ def act_mt4strategy_get(uid):
 @app.route("/mt4recommend/all/<page>", methods=['GET'])
 def act_mt4recommend_get_all(page):
     try:
-        obj = DAO.allRecordMT4Recommend(page)
-        if getattr(obj, 'data', None):
-            mt4ids = ''
+        ret = []
+        getret = http_get('action=SelInsideList', {"name": "", "sr": "0", "sort": "1"})
+        if getret:
+            obj = DAO.allRecordMT4Recommend(page)
             for tmp in obj['data']:
-                mt4ids = tmp['mt4id']
-                mt4ids += ','
-            mt4ids = mt4ids[:-1]
-            paradata = {'mt4idlist': mt4ids}
+                mt4ids = int(tmp['mt4id'])
+                for tmpret in getret:
+                    if mt4ids == tmpret['Mt4ID']:
+                        ret.append(tmpret)
 
-            if getattr(paradata, 'mt4idlist', None):
-                ret = http_get(paradata)
-            else:
-                ret = {}
-
-            obj['data'] = ret['data']
-
-        return json.dumps(obj)
+        return json.dumps(ret)
     finally:
         logger.warning("warn1")
 
@@ -120,7 +117,15 @@ def act_mt4recommend_save():
     para = request.get_data().decode()
     pdict = json.loads(para)
     obj = DAO.addMT4recommend(pdict)
-    return json.dumps(obj)
+    if obj:
+        upret = http_get('action=UpdateInside', {"mt4id": obj['mt4id'], "innerAccount": "1"})
+        if getattr(upret, 'errMsg', None):
+            return json.dumps(obj)
+        else:
+            return json.dumps({})
+    else:
+        return json.dumps({})
+
 
 # search service
 
@@ -163,9 +168,9 @@ def act_mt4strategy_get_all(page):
     return json.dumps(DAO.allRecordMT4(page))
 
 
-def http_get(para):
+def http_get(act, para):
     para = json.dumps(para, separators=(',', ':'))
-    para = '''action=MT4listInfo&json=''' + para
+    para = act + '''&json=''' + para
     print(para)
     para = 'http://118.178.95.73/Bonanza/Mt4Interface.ashx?' + para
 
@@ -174,7 +179,10 @@ def http_get(para):
     resp = urllib.request.urlopen(req)
     ret = resp.read().decode()
     ret = json.loads(ret)
-    print(ret)
+
+    while str == type(ret):
+        ret = json.loads(ret)
+
     return ret
 
 

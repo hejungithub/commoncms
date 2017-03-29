@@ -234,7 +234,7 @@ angular.module('services').factory('UserService', ['$q', '$http',
                         if ($.isEmptyObject(res)) {
                             deferred.reject();
                         } else {
-                            deferred.resolve(res.data);
+                            deferred.resolve(res);
                         }
                     }, function () {
                         deferred.reject();

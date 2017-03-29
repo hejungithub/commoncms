@@ -95,25 +95,25 @@
                     <table class="table table-striped">
                         <thead>
                         <tr>
-                            <th>类型</th>
-                            <th>MT4账号</th>
-                            <th>经济商</th>
-                            <th>交易天数</th>
+                            <th>MT4ID</th>
+                            <th>策略名</th>
+                            <th>账户资金</th>
+                            <th>日均单量</th>
                             <th>总收益率(%)</th>
-                            <th>盈亏金额($)</th>
-                            <th>状态</th>
+                            <th>跟随人数</th>
+                            <th>总平仓单胜率</th>
                             <th>策略管理</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr ng-repeat="mt4 in mt4recommend">
-                            <td>{{mt4.ACCOUNTTYPE}}</td>
-                            <td>{{mt4.ACCOUNT}}</td>
-                            <td>{{mt4.SHOWNAME}}</td>
-                            <td>{{mt4.DAYS}}</td>
-                            <td>{{mt4.C}}</td>
-                            <td>{{mt4.PROFIT}}</td>
-                            <td>{{mt4.STATUS}}</td>
+                        <tr ng-repeat="ret in remt4">
+                            <td>{{ret.Mt4ID}}</td>
+                            <td>{{ret.SName}}</td>
+                            <td>{{ret.Balance}}</td>
+                            <td>{{ret.AvgDayCount}}</td>
+                            <td>{{ret.C}}</td>
+                            <td>{{ret.FollowCount}}</td>
+                            <td>{{ret.WinRate}}</td>
                             <td>操作</td>
                         </tr>
                         </tbody>
