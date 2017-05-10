@@ -4,7 +4,8 @@
 from sqlalchemy import create_engine, and_
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import exc as sa_exc
-from app.model import Base, Admin, User, LiveCourse, HisCourse, MT4strategy, MT4recommend
+from app.model import Base, Admin, User, LiveCourse, \
+    HisCourse, MT4strategy, MT4recommend, MT4follow, Bank, Tixian
 
 """
 模型操作模块，负责数据存储层
@@ -81,9 +82,13 @@ class DataDB:
         ses = self.takeSes()
         try:
             user = ses.query(User).filter(User.id == uid).one()
-            ret = user.to_dict()
+            retu = user.to_dict()
+            bank = ses.query(Bank).filter(Bank.uid == uid).all()
+            bk = self.listtodict(bank)
+            if retu:
+                retu['bank'] = bk
             ses.close()
-            return ret
+            return retu
 
         except sa_exc.NoResultFound:
             ses.close()
@@ -223,10 +228,13 @@ class DataDB:
     def getMt4Strategy(self, uid):
         ses = self.takeSes()
         try:
+            mt4follow = ses.query(MT4follow).filter(MT4follow.uid == uid).all()
             mt4stra = ses.query(MT4strategy).filter(MT4strategy.uid == uid).all()
-            ret = self.listtodict(mt4stra)
+            retstr = self.listtodict(mt4stra)
+            retf = self.listtodict(mt4follow)
+            retstr.extend(retf)
             ses.close()
-            return ret
+            return retstr
 
         except sa_exc.NoResultFound:
             ses.close()

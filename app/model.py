@@ -26,6 +26,7 @@ def to_dict(self):
         ret[col.name] = value
     return ret
 
+
 # db model base
 # add to_dict parse json
 Base = declarative_base()
@@ -84,9 +85,44 @@ class MT4strategy(Base):
     createtime = Column(DateTime)
 
 
+class MT4follow(Base):
+    __tablename__ = 'mt4follow'
+    id = Column(Integer, primary_key=True)
+    uid = Column(Integer)
+    mt4id = Column(String(200))
+    smt4id = Column(String(200))
+    createtime = Column(DateTime)
+
+
 class MT4recommend(Base):
     __tablename__ = 'mt4recommend'
     id = Column(Integer, primary_key=True)
     uid = Column(Integer)
     uname = Column(String(200))
     mt4id = Column(String(200))
+
+
+class Bank(Base):
+    __tablename__ = 'bank'
+    id = Column(Integer, primary_key=True)
+    uid = Column(Integer)
+    bankname = Column(String(200))
+    branchbank = Column(String(200))
+    name = Column(String(200))
+    num = Column(String(200))
+    uname = Column(String(200))
+
+
+class Tixian(Base):
+    __tablename__ = 'tx'
+    id = Column(Integer, primary_key=True)
+    uid = Column(Integer)
+    bankname = Column(String(200))
+    branchbank = Column(String(200))
+    money = Column(Float)
+    name = Column(String(200))
+    num = Column(String(200))
+    uname = Column(String(200))
+    status = Column(Integer)
+    bank_num = Column(String(200))
+    createtime = Column(DateTime)

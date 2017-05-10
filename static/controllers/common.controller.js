@@ -122,6 +122,7 @@ angular.module('controllers').controller('UserDetailController', ['$http', '$sco
     function ($http, $scope, $stateParams, UserService) {
         'use strict';
         UserService.getUserById($stateParams.id).then(function(data){
+            console.log(data);
             $scope.user = data;
         });
         UserService.getMt4strategyById($stateParams.id).then(function(data){
