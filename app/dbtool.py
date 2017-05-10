@@ -26,9 +26,7 @@ class DataDB:
     def get_admin(self, obj):
         ses = self.takeSes()
         try:
-            ad = ses.query(Admin).filter(
-                and_(Admin.name == obj['username'],
-                     Admin.password == obj['userpwd'])).one()
+            ad = ses.query(Admin).filter(and_(Admin.name == obj['username'], Admin.password == obj['userpwd'])).one()
 
             ret = ad.to_dict()
             ses.close()
@@ -131,7 +129,11 @@ class DataDB:
     def search(self, pdict):
         ses = self.takeSes()
         try:
-            query = ses.query(User).filter(User.name.like('%' + pdict['name'] + '%'))
+            if 'name' in pdict:
+                query = ses.query(User).filter(User.name.like('%' + pdict['name'] + '%'))
+            else:
+                query = ses.query(User).filter(User.tel.like('%' + pdict['tel'] + '%'))
+
             ad = query.limit(10).offset(int(pdict['cur']) * 10).all()
             alls = query.all()
             if len(ad) == 0:
@@ -278,6 +280,23 @@ class DataDB:
                 return ret
 
         except:
+            ses.rollback()
+            ses.close()
+            return {}
+
+    def addUserVal(self, pdict):
+        ses = self.takeSes()
+        try:
+            usr = ses.query(User).filter(User.id == pdict['uid']).one()
+            if pdict.get('valtype') == 'money':
+                usr.money += float(pdict['val'])
+            else:
+                usr.qiaomoney += float(pdict['val'])
+            ret = usr.to_dict()
+            ses.commit()
+            ses.close()
+            return ret
+        except sa_exc.NoResultFound:
             ses.rollback()
             ses.close()
             return {}

@@ -167,6 +167,14 @@ def act_mt4strategy_get_all(page):
     return json.dumps(DAO.allRecordMT4(page))
 
 
+@app.route("/sysaddval", methods=['POST'])
+def act_sys_addval():
+    para = request.get_data().decode()
+    ddict = json.loads(para)
+    obj = DAO.addUserVal(ddict)
+    return json.dumps(obj)
+
+
 def service_api(act, para):
     para = json.dumps(para, separators=(',', ':'))
     para = act + '''&json=''' + para
@@ -181,5 +189,7 @@ def service_api(act, para):
 
     return ret
 
+
 if __name__ == "__main__":
     app.run(host='127.0.0.1', port=3000, debug=True)
+

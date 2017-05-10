@@ -235,4 +235,102 @@ angular.module('controllers').controller('MT4recommendController', ['$http', '$s
     }
 ]);
 
+angular.module('controllers').controller('SysAddValController', ['$http', '$scope', 'SystemService',
+    function ($http, $scope, SystemService) {
+        'use strict';
+
+        $scope.types = {
+            "用户名" : "name",
+            "手机" : "tel"
+        };
+
+        $scope.cond = "tel";
+        $scope.condval = "";
+        $scope.users = {};
+        $scope.size = {};
+        $scope.currentPage = 0;
+        $scope.totalItems = {};
+        $scope.maxSize = 5;
+
+        $scope.pageChanged = function () {
+            var pa = {};
+            pa.cur = $scope.currentPage;
+
+            if($scope.cond == "tel"){
+                pa.tel = $scope.condval;
+            }else{
+                pa.name = $scope.condval;
+            }
+
+            SystemService.dosearch(pa).then(function (tmp) {
+                if($.isEmptyObject(tmp)){
+                }else{
+                    $scope.users = tmp.data;
+                    $scope.size = tmp.persize;
+                    $scope.currentPage = tmp.cur;
+                    $scope.totalItems = tmp.total;
+                    $scope.maxSize = 5;
+                }
+            });
+        };
+
+        $scope.dosearch = function(){
+            var pa = {};
+            pa.cur = $scope.currentPage;
+
+            if($scope.cond == "tel"){
+                pa.tel = $scope.condval;
+            }else{
+                pa.name = $scope.condval;
+            }
+
+            SystemService.dosearch(pa).then(function(tmp){
+                if($.isEmptyObject(tmp)){
+                }else{
+                    $scope.users = tmp.data;
+                    $scope.size = tmp.persize;
+                    $scope.currentPage = tmp.cur;
+                    $scope.totalItems = tmp.total;
+                    $scope.maxSize = 5;
+                }
+            },function(){
+            });
+        };
+
+        $scope.dosearch();
+    }
+]);
+
+
+
+angular.module('controllers').controller('SysAddValRealController', ['$http', '$scope', '$state', '$stateParams', 'SystemService',
+    function ($http, $scope, $state, $stateParams, SystemService) {
+        'use strict';
+
+        $scope.types = {
+            "奖金" : "money",
+            "齐傲币" : "qiaomoney"
+        };
+        $scope.valtype = "money";
+
+        $scope.uid = $stateParams.id;
+        $scope.uname = $stateParams.name;
+
+
+        $scope.doadd = function(){
+            var pa = {};
+            pa.uid = $scope.uid;
+            pa.val = $scope.addval;
+            pa.valtype = $scope.valtype;
+
+            SystemService.doadd(pa).then(function(){
+                alert("充值成功!");
+                $state.go("home.addval");
+            },function(){
+                alert("充值失败!");
+                $state.go("home.addval");
+            });
+        }
+    }
+]);
 

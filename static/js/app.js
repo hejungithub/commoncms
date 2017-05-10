@@ -164,4 +164,32 @@ angular.module('routeApp', [
                 MT4RECOMMEND: ['UserService', function (resolve) { return resolve.getMt4Recommend();}]
             }
         })
+
+
+        /**
+         * 系统充值
+         * */
+        .state('home.addval', {
+            url:'system/addval',
+            views: {
+                'rtcontent@': {
+                    templateUrl: '/cms/static/views/sysaddval.html',
+                    controller: 'SysAddValController'
+                }
+            }
+        })
+
+    /**
+     * 系统充值
+     * */
+        .state('home.addvalreal', {
+            url:'system/addvalreal/:id-:name',
+            views: {
+                'rtcontent@': {
+                    templateUrl: '/cms/static/views/sysaddvalreal.html',
+                    controller: 'SysAddValRealController'
+                }
+            }
+        })
+
 }]);

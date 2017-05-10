@@ -250,7 +250,7 @@ angular.module('services').factory('UserService', ['$q', '$http',
 
 /**
  *
- * course service func
+ * course service
  * */
 angular.module('services').factory('CourseService', ['$q', '$http',
     function ($q, $http) {
@@ -328,6 +328,52 @@ angular.module('services').factory('CourseService', ['$q', '$http',
                     });
                     deferred.resolve(ret);
                 }
+
+                return deferred.promise;
+            }
+        };
+    }
+]);
+
+
+
+
+
+/**
+ *
+ * system service
+ * */
+angular.module('services').factory('SystemService', ['$q', '$http',
+    function ($q, $http) {
+        return {
+            dosearch: function (para) {
+                var deferred = $q.defer();
+                $http.post('/cms/search', JSON.stringify(para))
+                    .then(function (res) {
+                        if ($.isEmptyObject(res)) {
+                            deferred.reject();
+                        } else {
+                            deferred.resolve(res.data);
+                        }
+                    }, function () {
+                        deferred.reject();
+                    });
+
+                return deferred.promise;
+            },
+
+            doadd:function(para){
+                var deferred = $q.defer();
+                $http.post('/cms/sysaddval', JSON.stringify(para))
+                    .then(function (res) {
+                        if ($.isEmptyObject(res)) {
+                            deferred.resolve();
+                        } else {
+                            deferred.resolve(res.data);
+                        }
+                    }, function () {
+                        deferred.reject();
+                    });
 
                 return deferred.promise;
             }
