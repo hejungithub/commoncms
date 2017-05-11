@@ -179,15 +179,29 @@ angular.module('routeApp', [
             }
         })
 
-    /**
-     * 系统充值
-     * */
+        /**
+         * 系统充值
+         * */
         .state('home.addvalreal', {
             url:'system/addvalreal/:id-:name',
             views: {
                 'rtcontent@': {
                     templateUrl: '/cms/static/views/sysaddvalreal.html',
                     controller: 'SysAddValRealController'
+                }
+            }
+        })
+
+
+        /**
+         * 提现
+         * */
+        .state('home.tixian', {
+            url:'system/tixian',
+            views: {
+                'rtcontent@': {
+                    templateUrl: '/cms/static/views/systixian.html',
+                    controller: 'SysTixianController'
                 }
             }
         })

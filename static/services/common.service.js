@@ -113,7 +113,6 @@ angular.module('services').factory('NavService', ['$q', '$http',
  * */
 angular.module('services').factory('UserService', ['$q', '$http',
     function ($q, $http) {
-        var AllUsers = {};
         return {
             getUserRemote: function (id) {
                 var deferred = $q.defer();
@@ -140,7 +139,6 @@ angular.module('services').factory('UserService', ['$q', '$http',
                         if ($.isEmptyObject(res)) {
                             window.location.href = "/cms/"
                         } else {
-                            AllUsers = res.data;
                             deferred.resolve(res.data);
                         }
                     }, function () {
@@ -153,19 +151,9 @@ angular.module('services').factory('UserService', ['$q', '$http',
             getUserById: function (ids) {
                 var deferred = $q.defer();
 
-                if ($.isEmptyObject(AllUsers)) {
-                    this.getUserRemote(ids).then(function (retdata) {
-                        deferred.resolve(retdata);
-                    });
-                } else {
-                    var ret = null;
-                    $.each(AllUsers.data, function (idx, tmp) {
-                        if (ids == tmp.id) {
-                            ret = tmp;
-                        }
-                    });
-                    deferred.resolve(ret);
-                }
+                this.getUserRemote(ids).then(function (retdata) {
+                    deferred.resolve(retdata);
+                });
                 return deferred.promise;
             },
             getMt4strategyById: function(id) {
@@ -373,6 +361,59 @@ angular.module('services').factory('SystemService', ['$q', '$http',
                         }
                     }, function () {
                         deferred.reject();
+                    });
+
+                return deferred.promise;
+            },
+
+            getTixanAll: function (datapage) {
+                if (!datapage) {
+                    datapage = 0;
+                }
+                var deferred = $q.defer();
+                $http.get('/cms/tixian/all/' + datapage)
+                    .then(function (res) {
+                        if ($.isEmptyObject(res)) {
+                            deferred.reject();
+                        } else {
+                            deferred.resolve(res.data);
+                        }
+                    }, function () {
+                        deferred.reject();
+                        window.location.href = "/cms/"
+                    });
+
+                return deferred.promise;
+            },
+
+            tixian: function(oid){
+                var deferred = $q.defer();
+                $http.get('/cms/tixian/do/' + oid)
+                    .then(function (res) {
+                        if ($.isEmptyObject(res)) {
+                            deferred.reject();
+                        } else {
+                            deferred.resolve(res.data);
+                        }
+                    }, function () {
+                        deferred.reject();
+                        window.location.href = "/cms/"
+                    });
+
+                return deferred.promise;
+            },
+            cancelTixian: function(oid){
+                var deferred = $q.defer();
+                $http.get('/cms/tixian/cancel/' + oid)
+                    .then(function (res) {
+                        if ($.isEmptyObject(res)) {
+                            deferred.reject();
+                        } else {
+                            deferred.resolve(res.data);
+                        }
+                    }, function () {
+                        deferred.reject();
+                        window.location.href = "/cms/"
                     });
 
                 return deferred.promise;

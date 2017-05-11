@@ -10,6 +10,68 @@
             </div>
         </div>
 
+
+        <div class="panel panel-default">
+            <div class="panel-heading" data-toggle="collapse"
+                 data-parent="#accordion"
+                 data-target="#collapseTwo">
+                <h4 class="panel-title">
+                    <a href="javascript:;" class="text-warning">
+                        已有推荐MT4列表
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseTwo" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>MT4ID</th>
+                            <th>策略名</th>
+                            <th>账户资金</th>
+                            <th>日均单量</th>
+                            <th>总收益率(%)</th>
+                            <th>跟随人数</th>
+                            <th>总平仓单胜率</th>
+                            <th>策略管理</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="ret in remt4">
+                            <td>{{ret.Mt4ID}}</td>
+                            <td>{{ret.SName}}</td>
+                            <td>{{ret.Balance}}</td>
+                            <td>{{ret.AvgDayCount}}</td>
+                            <td>{{ret.C}}</td>
+                            <td>{{ret.FollowCount}}</td>
+                            <td>{{ret.WinRate}}</td>
+                            <td>操作</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- paging -->
+                    <pagination
+                            total-items="retotalItems"
+                            ng-model="recurrentPage"
+                            max-size="remaxSize"
+                            items-per-page="resize"
+                            ng-change="repageChanged()"
+                            boundary-link-numbers="true"
+                            boundary-links="true"
+                            previous-text="上一页"
+                            next-text="下一页"
+                            first-text="首页"
+                            last-text="尾页"
+                            >
+                    </pagination>
+                    <br/>
+                    <br/>
+                </div>
+            </div>
+        </div>
+
+
         <div class="panel panel-default">
             <div class="panel-heading" data-toggle="collapse"
                  data-parent="#accordion"
@@ -20,7 +82,7 @@
                     </a>
                 </h4>
             </div>
-            <div id="collapseOne" class="panel-collapse collapse in">
+            <div id="collapseOne" class="panel-collapse collapse">
                 <div class="panel-body">
                     <form class="form-horizontal" role="form">
                         <div class="form-group">
@@ -80,64 +142,5 @@
         </div>
 
 
-        <div class="panel panel-default">
-            <div class="panel-heading" data-toggle="collapse"
-                 data-parent="#accordion"
-                 data-target="#collapseTwo">
-                <h4 class="panel-title">
-                    <a href="javascript:;" class="text-warning">
-                        已有推荐MT4列表
-                    </a>
-                </h4>
-            </div>
-            <div id="collapseTwo" class="panel-collapse collapse">
-                <div class="panel-body">
-                    <table class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th>MT4ID</th>
-                            <th>策略名</th>
-                            <th>账户资金</th>
-                            <th>日均单量</th>
-                            <th>总收益率(%)</th>
-                            <th>跟随人数</th>
-                            <th>总平仓单胜率</th>
-                            <th>策略管理</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="ret in remt4">
-                            <td>{{ret.Mt4ID}}</td>
-                            <td>{{ret.SName}}</td>
-                            <td>{{ret.Balance}}</td>
-                            <td>{{ret.AvgDayCount}}</td>
-                            <td>{{ret.C}}</td>
-                            <td>{{ret.FollowCount}}</td>
-                            <td>{{ret.WinRate}}</td>
-                            <td>操作</td>
-                        </tr>
-                        </tbody>
-                    </table>
-
-                    <!-- paging -->
-                    <pagination
-                            total-items="retotalItems"
-                            ng-model="recurrentPage"
-                            max-size="remaxSize"
-                            items-per-page="resize"
-                            ng-change="repageChanged()"
-                            boundary-link-numbers="true"
-                            boundary-links="true"
-                            previous-text="上一页"
-                            next-text="下一页"
-                            first-text="首页"
-                            last-text="尾页"
-                            >
-                    </pagination>
-                    <br/>
-                    <br/>
-                </div>
-            </div>
-        </div>
     </div>
 </div>

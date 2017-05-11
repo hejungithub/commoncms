@@ -122,7 +122,6 @@ angular.module('controllers').controller('UserDetailController', ['$http', '$sco
     function ($http, $scope, $stateParams, UserService) {
         'use strict';
         UserService.getUserById($stateParams.id).then(function(data){
-            console.log(data);
             $scope.user = data;
         });
         UserService.getMt4strategyById($stateParams.id).then(function(data){
@@ -335,3 +334,65 @@ angular.module('controllers').controller('SysAddValRealController', ['$http', '$
     }
 ]);
 
+
+angular.module('controllers').controller('SysTixianController', ['$http', '$scope', '$modal', '$state', '$stateParams', 'SystemService',
+    function ($http, $scope, $modal, $state, $stateParams, SystemService) {
+        'use strict';
+
+        $scope.pageChanged = function () {
+            SystemService.getTixanAll($scope.currentPage).then(function (tmp) {
+                console.log(tmp);
+                $scope.dss = tmp.data;
+                $scope.size = tmp.persize;
+                $scope.currentPage = tmp.cur;
+                $scope.totalItems = tmp.total;
+                $scope.maxSize = 5;
+            });
+        };
+        $scope.pageChanged();
+
+        $scope.openModel = function(oid) {
+            $scope.oid = oid;
+            $modal.open({
+                templateUrl : 'modal.html',
+                controller : 'modalCtrl',
+                resolve : {
+                    page : function() {
+                        return $scope;
+                    }
+                }
+            })
+        };
+
+        $scope.tixian = function(){
+            SystemService.tixian($scope.oid).then(function (tmp) {
+                $scope.pageChanged();
+            });
+        };
+
+        $scope.cancelTxian = function(){
+            SystemService.cancelTixian($scope.oid).then(function (tmp) {
+                $scope.pageChanged();
+            });
+        }
+    }
+]);
+
+
+angular.module('controllers').controller('modalCtrl', ['$http', '$scope', '$uibModalInstance','page',
+    function ($http, $scope, $uibModalInstance, page) {
+        'use strict';
+
+        $scope.ok = function() {
+            page.tixian();
+            $uibModalInstance.close();
+        };
+        $scope.cancel = function() {
+            page.cancelTxian();
+            $uibModalInstance.close();
+        };
+        $scope.quit = function() {
+            $uibModalInstance.close();
+        }
+    }
+]);

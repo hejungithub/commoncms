@@ -167,6 +167,21 @@ def act_mt4strategy_get_all(page):
     return json.dumps(DAO.allRecordMT4(page))
 
 
+@app.route("/tixian/all/<page>", methods=['GET'])
+def act_tixian_get_all(page):
+    return json.dumps(DAO.allRecord(page, model.Tixian))
+
+
+@app.route("/tixian/do/<idx>", methods=['GET'])
+def act_tixian_do(idx):
+    return json.dumps(DAO.dotixian(idx))
+
+
+@app.route("/tixian/cancel/<idx>", methods=['GET'])
+def act_tixian_cancel(idx):
+    return json.dumps(DAO.dotixiancancel(idx))
+
+
 @app.route("/sysaddval", methods=['POST'])
 def act_sys_addval():
     para = request.get_data().decode()
@@ -192,4 +207,3 @@ def service_api(act, para):
 
 if __name__ == "__main__":
     app.run(host='127.0.0.1', port=3000, debug=True)
-

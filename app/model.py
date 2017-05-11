@@ -121,7 +121,6 @@ class Tixian(Base):
     branchbank = Column(String(200))
     money = Column(Float)
     name = Column(String(200))
-    num = Column(String(200))
     uname = Column(String(200))
     status = Column(Integer)
     bank_num = Column(String(200))

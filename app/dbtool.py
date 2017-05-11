@@ -185,7 +185,8 @@ class DataDB:
                 ses.close()
                 return ret
 
-        except:
+        except Exception as err:
+            print(err)
             ses.rollback()
             ses.close()
             return {}
@@ -301,6 +302,36 @@ class DataDB:
             else:
                 usr.qiaomoney += float(pdict['val'])
             ret = usr.to_dict()
+            ses.commit()
+            ses.close()
+            return ret
+        except sa_exc.NoResultFound:
+            ses.rollback()
+            ses.close()
+            return {}
+
+    def dotixian(self, obj):
+        ses = self.takeSes()
+        try:
+            ad = ses.query(Tixian).filter(Tixian.id == int(obj)).one()
+            ad.status = 2
+            ret = ad.to_dict()
+
+            ses.commit()
+            ses.close()
+            return ret
+        except sa_exc.NoResultFound:
+            ses.rollback()
+            ses.close()
+            return {}
+
+    def dotixiancancel(self, obj):
+        ses = self.takeSes()
+        try:
+            ad = ses.query(Tixian).filter(Tixian.id == obj).one()
+            ad.status = 1
+            ret = ad.to_dict()
+
             ses.commit()
             ses.close()
             return ret
