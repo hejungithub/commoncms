@@ -43,7 +43,7 @@
                 <tr ng-repeat="(idx,ds) in dss">
                     <td><a ui-sref="home.userdetail({id: ds.uid })">{{ds.uname}}</a></td>
                     <td>{{ds.name}}</td>
-                    <td>{{ds.money}}</td>
+                    <td>{{ds.money | currency : '￥'}}</td>
                     <td>{{ds.bankname}}</td>
                     <td>{{ds.branchbank}}</td>
                     <td>{{ds.bank_num}}</td>
