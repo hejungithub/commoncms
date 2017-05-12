@@ -162,7 +162,31 @@ def act_user_get_all(page):
 
 @app.route("/mt4strategy/all/<page>", methods=['GET'])
 def act_mt4strategy_get_all(page):
-    return json.dumps(DAO.allRecordMT4(page))
+    obj = DAO.allRecordMT4(page)
+
+    mt4ids = (tmp['mt4id'] for tmp in obj['data'] if obj.get('data'))
+
+    rets = []
+
+    if mt4ids:
+        ids = ''
+        for idd in mt4ids:
+            ids += idd
+            ids += ','
+        paradata = {'mt4idlist': ids[:-1]}
+        if paradata.get('mt4idlist'):
+            ret = service_api('action=MT4listInfo', paradata)
+            rettm = [temp for temp in ret['data'] if ret and ret.get('data')]
+            objdt = obj['data']
+            for itm in objdt:
+                for tt in rettm:
+                    if itm['mt4id'] == tt['ID']:
+                        itm['SNAME'] = tt['SNAME']
+                        itm['ACCOUNT'] = tt['ACCOUNT']
+                        rets.append(itm)
+
+            obj['data'] = rets
+    return json.dumps(obj)
 
 
 @app.route("/tixian/all/<page>", methods=['GET'])
