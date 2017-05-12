@@ -7,6 +7,8 @@ from sqlalchemy.orm import exc as sa_exc
 from app.model import Base, Admin, User, LiveCourse, \
     HisCourse, MT4strategy, MT4recommend, MT4follow, Bank, Tixian
 
+from web import logger
+
 """
 模型操作模块，负责数据存储层
 """
@@ -32,7 +34,8 @@ class DataDB:
             ret = ad.to_dict()
             ses.close()
             return ret
-        except sa_exc.NoResultFound:
+        except Exception as err:
+            logger.info(err)
             ses.close()
             return {}
 
@@ -50,7 +53,8 @@ class DataDB:
             ses.commit()
             ses.close()
             return ret
-        except:
+        except Exception as err:
+            logger.info(err)
             ses.rollback()
             ses.close()
             return {}
@@ -90,7 +94,8 @@ class DataDB:
             ses.close()
             return retu
 
-        except sa_exc.NoResultFound:
+        except Exception as err:
+            logger.info(err)
             ses.close()
             return {}
 
@@ -111,7 +116,8 @@ class DataDB:
                 ses.commit()
                 ses.close()
                 return ret
-        except:
+        except Exception as err:
+            logger.info(err)
             ses.rollback()
             ses.close()
             return {}
@@ -126,7 +132,8 @@ class DataDB:
             ses.commit()
             ses.close()
             return ret
-        except sa_exc.NoResultFound:
+        except Exception as err:
+            logger.info(err)
             ses.rollback()
             ses.close()
             return {}
@@ -156,7 +163,8 @@ class DataDB:
                 ses.close()
                 return ret
 
-        except:
+        except Exception as err:
+            logger.info(err)
             ses.rollback()
             ses.close()
             return {}
@@ -186,7 +194,7 @@ class DataDB:
                 return ret
 
         except Exception as err:
-            print(err)
+            logger.info(err)
             ses.rollback()
             ses.close()
             return {}
@@ -221,7 +229,8 @@ class DataDB:
                 ses.close()
                 return ret
 
-        except:
+        except Exception as err:
+            logger.info(err)
             ses.rollback()
             ses.close()
             return {}
@@ -237,7 +246,8 @@ class DataDB:
             ses.close()
             return retstr
 
-        except sa_exc.NoResultFound:
+        except Exception as err:
+            logger.info(err)
             ses.close()
             return {}
 
@@ -255,7 +265,8 @@ class DataDB:
             ses.close()
             return ret
 
-        except:
+        except Exception as err:
+            logger.info(err)
             ses.rollback()
             ses.close()
             return {}
@@ -288,7 +299,8 @@ class DataDB:
                 ses.close()
                 return ret
 
-        except:
+        except Exception as err:
+            logger.info(err)
             ses.rollback()
             ses.close()
             return {}
@@ -305,7 +317,8 @@ class DataDB:
             ses.commit()
             ses.close()
             return ret
-        except sa_exc.NoResultFound:
+        except Exception as err:
+            logger.info(err)
             ses.rollback()
             ses.close()
             return {}
@@ -320,7 +333,8 @@ class DataDB:
             ses.commit()
             ses.close()
             return ret
-        except sa_exc.NoResultFound:
+        except Exception as err:
+            logger.info(err)
             ses.rollback()
             ses.close()
             return {}
@@ -335,7 +349,8 @@ class DataDB:
             ses.commit()
             ses.close()
             return ret
-        except sa_exc.NoResultFound:
+        except Exception as err:
+            logger.info(err)
             ses.rollback()
             ses.close()
             return {}

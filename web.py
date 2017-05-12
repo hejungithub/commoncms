@@ -65,10 +65,7 @@ def act_user_add(uname):
 
 @app.route("/user/get/<uid>", methods=['GET'])
 def act_user_get(uid):
-    try:
-        return json.dumps(DAO.getUser(uid))
-    finally:
-        logger.warning("warn1")
+    return json.dumps(DAO.getUser(uid))
 
 
 @app.route("/mt4strategy/get/<uid>", methods=['GET'])
@@ -89,8 +86,10 @@ def act_mt4strategy_get(uid):
             ret = {}
 
         return json.dumps(ret)
-    finally:
-        logger.warning("warn1")
+
+    except Exception as err:
+        logger.info(err)
+        return json.dumps({})
 
 
 @app.route("/mt4recommend/all/<page>", methods=['GET'])
@@ -107,8 +106,11 @@ def act_mt4recommend_get_all(page):
                         ret.append(tmpret)
 
         return json.dumps(ret)
-    finally:
-        logger.warning("warn1")
+
+    except Exception as err:
+        logger.info(err)
+
+        return json.dumps({})
 
 
 @app.route("/mt4strategy/save", methods=['POST'])
@@ -194,7 +196,6 @@ def service_api(act, para):
     para = json.dumps(para, separators=(',', ':'))
     para = act + '''&json=''' + para
     para = 'http://118.178.95.73/Bonanza/Mt4Interface.ashx?' + para
-    print(para)
     req = urllib.request.Request(method='GET', url=para)
     resp = urllib.request.urlopen(req)
     ret = resp.read().decode()
