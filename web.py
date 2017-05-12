@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-import logging
-import logging.config
+
 import json
 import urllib.request
 import urllib.response
@@ -11,12 +10,9 @@ from flask import request
 from flask import Flask
 from app import dbtool
 from app import model
+from app.utils import logger
 
 app = Flask(__name__)
-
-# log
-logging.config.fileConfig("logger.conf")
-logger = logging.getLogger("example02")
 
 # db
 DAO = dbtool.DataDB()

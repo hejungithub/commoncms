@@ -3,11 +3,10 @@
 
 from sqlalchemy import create_engine, and_
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.orm import exc as sa_exc
 from app.model import Base, Admin, User, LiveCourse, \
     HisCourse, MT4strategy, MT4recommend, MT4follow, Bank, Tixian
 
-from web import logger
+from app.utils import logger
 
 """
 模型操作模块，负责数据存储层
