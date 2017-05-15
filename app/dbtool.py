@@ -4,9 +4,10 @@
 from sqlalchemy import create_engine, and_
 from sqlalchemy.orm import sessionmaker
 from app.model import Base, Admin, User, LiveCourse, \
-    HisCourse, MT4strategy, MT4recommend, MT4follow, Bank, Tixian
+    HisCourse, MT4strategy, MT4recommend, MT4follow, Bank, Tixian, Msg
 
 from app.utils import logger
+import datetime
 
 """
 模型操作模块，负责数据存储层
@@ -15,7 +16,7 @@ from app.utils import logger
 
 class DataDB:
     engine = create_engine("mysql+pymysql://root:@localhost:3306/qiao?charset=utf8",
-                           encoding="utf-8", echo=True)
+                           encoding="utf-8", echo=False)
     DBSession = sessionmaker(bind=engine, )
     Base.metadata.create_all(bind=engine, )
 
@@ -348,6 +349,58 @@ class DataDB:
             ses.commit()
             ses.close()
             return ret
+        except Exception as err:
+            logger.info(err)
+            ses.rollback()
+            ses.close()
+            return {}
+
+    def allMsgRecord(self, page):
+        tmppage = int(page)
+        if tmppage > 0:
+            tmppage -= 1
+
+        ses = self.takeSes()
+        try:
+            rets = ses.query(Msg.title, Msg.content, Msg.time).distinct(Msg.time).limit(10).offset(tmppage * 10).all()
+            alls = ses.query(Msg.title, Msg.content, Msg.time).distinct(Msg.time).all()
+            if len(rets) == 0:
+                raise BaseException
+            else:
+                allsize = len(alls)
+                ret = {
+                    'total': allsize,
+                    'page': round(allsize / 10),
+                    'cur': page,
+                    'data': rets,
+                    'persize': 10
+                }
+                ses.commit()
+                ses.close()
+                return ret
+
+        except Exception as err:
+            logger.info(err)
+            ses.rollback()
+            ses.close()
+            return {}
+
+    def add_new_msg(self, pdict):
+        ses = self.takeSes()
+        try:
+            usr = ses.query(User).all()
+            nowtime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+            for itm in usr:
+                new_msg = Msg(uid=itm.id, title=pdict['title'],
+                              content=pdict['content'], time=nowtime)
+                ses.add(new_msg)
+
+            ses.commit()
+            ses.close()
+
+            return {'num': len(usr)}
+
         except Exception as err:
             logger.info(err)
             ses.rollback()

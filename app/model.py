@@ -125,3 +125,12 @@ class Tixian(Base):
     status = Column(Integer)
     bank_num = Column(String(200))
     createtime = Column(DateTime)
+
+
+class Msg(Base):
+    __tablename__ = 'message'
+    id = Column(Integer, primary_key=True)
+    uid = Column(Integer)
+    title = Column(String(200))
+    content = Column(String(200))
+    time = Column(String(200))

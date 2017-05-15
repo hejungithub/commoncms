@@ -206,4 +206,30 @@ angular.module('routeApp', [
             }
         })
 
+        /**
+         * send msg
+         * */
+        .state('home.msg', {
+            url:'system/msg',
+            views: {
+                'rtcontent@': {
+                    templateUrl: '/cms/static/views/sysmsg.html',
+                    controller: 'SysMsgController'
+                }
+            }
+        })
+
+        /**
+         * add msg
+         * */
+        .state('home.msgadd', {
+            url:'system/msg/add',
+            views: {
+                'rtcontent@': {
+                    templateUrl: '/cms/static/views/sysmsgadd.html',
+                    controller: 'SysMsgAddController'
+                }
+            }
+        })
+
 }]);

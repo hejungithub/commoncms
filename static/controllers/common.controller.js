@@ -396,3 +396,36 @@ angular.module('controllers').controller('modalCtrl', ['$http', '$scope', '$uibM
         }
     }
 ]);
+
+
+
+angular.module('controllers').controller('SysMsgController', ['$http', '$scope', '$state', '$stateParams', 'SystemService',
+    function ($http, $scope, $state, $stateParams, SystemService) {
+        'use strict';
+
+        $scope.pageChanged = function () {
+            SystemService.getMsgAll($scope.currentPage).then(function (tmp) {
+                $scope.dss = tmp.data;
+                $scope.size = tmp.persize;
+                $scope.currentPage = tmp.cur;
+                $scope.totalItems = tmp.total;
+                $scope.maxSize = 5;
+            });
+        };
+        $scope.pageChanged();
+    }
+]);
+
+
+angular.module('controllers').controller('SysMsgAddController', ['$http', '$scope', '$state', '$stateParams', 'SystemService',
+    function ($http, $scope, $state, $stateParams, SystemService) {
+        'use strict';
+
+        $scope.sendMsg = function(){
+            SystemService.sendMsg($scope.msg).then(function(){
+                alert("添加成功!");
+                $state.go('home.msg');
+            })
+        };
+    }
+]);

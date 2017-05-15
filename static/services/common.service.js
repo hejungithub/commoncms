@@ -417,7 +417,50 @@ angular.module('services').factory('SystemService', ['$q', '$http',
                     });
 
                 return deferred.promise;
+            },
+
+            getMsgAll: function (datapage) {
+                if (!datapage) {
+                    datapage = 0;
+                }
+                var deferred = $q.defer();
+                $http.get('/cms/msg/all/' + datapage)
+                    .then(function (res) {
+                        if ($.isEmptyObject(res)) {
+                            deferred.reject();
+                        } else {
+                            deferred.resolve(res.data);
+                        }
+                    }, function () {
+                        deferred.reject();
+                        window.location.href = "/cms/"
+                    });
+
+                return deferred.promise;
+            },
+
+            sendMsg: function(obj) {
+                var deferred = $q.defer();
+
+                var para = {
+                    'title': obj.title,
+                    'content': obj.content
+                };
+
+                $http.post('/cms/msg/add', JSON.stringify(para))
+                    .then(function (res) {
+                        if ($.isEmptyObject(res)) {
+                            deferred.reject();
+                            window.location.href = "/cms/"
+                        } else {
+                            deferred.resolve(res.data);
+                        }
+                    }, function () {
+                        deferred.reject();
+                    });
+                return deferred.promise;
             }
+
         };
     }
 ]);

@@ -212,6 +212,19 @@ def act_sys_addval():
     return json.dumps(obj)
 
 
+@app.route("/msg/all/<page>", methods=['GET'])
+def act_msg_get_all(page):
+    return json.dumps(DAO.allMsgRecord(page))
+
+
+@app.route("/msg/add", methods=['POST'])
+def act_msg_add():
+    para = request.get_data().decode()
+    ddict = json.loads(para)
+    obj = DAO.add_new_msg(ddict)
+    return json.dumps(obj)
+
+
 def service_api(act, para):
     para = json.dumps(para, separators=(',', ':'))
     para = act + '''&json=''' + para
