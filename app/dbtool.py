@@ -26,6 +26,10 @@ class DataDB:
     def __call__(self, **kwargs):
         pass
 
+    def takeSes(self):
+        session = DataDB.DBSession()
+        return session
+
     def get_admin(self, obj):
         ses = self.takeSes()
         try:
@@ -77,10 +81,6 @@ class DataDB:
             else:
                 pass
         return des
-
-    def takeSes(self):
-        session = DataDB.DBSession()
-        return session
 
     def getUser(self, uid):
         ses = self.takeSes()
