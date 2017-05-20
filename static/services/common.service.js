@@ -243,9 +243,7 @@ angular.module('services').factory('UserService', ['$q', '$http',
 angular.module('services').factory('CourseService', ['$q', '$http',
     function ($q, $http) {
         return {
-            Lives: {},
-            His: {},
-            getLiveRemote: function (id) {
+            getLiveById: function (id) {
                 var deferred = $q.defer();
                 $http.get('/cms/live/get/' + id)
                     .then(function (res) {
@@ -260,6 +258,51 @@ angular.module('services').factory('CourseService', ['$q', '$http',
                     });
                 return deferred.promise;
             },
+            save_live: function(obj) {
+                var deferred = $q.defer();
+                $http.post('/cms/live/save', JSON.stringify(obj))
+                    .then(function (res) {
+                        if ($.isEmptyObject(res)) {
+                            deferred.reject();
+                        } else {
+                            deferred.resolve(res.data);
+                        }
+                    }, function () {
+                        deferred.reject();
+                    });
+
+                return deferred.promise;
+            },
+            getHisById: function (id) {
+                var deferred = $q.defer();
+                $http.get('/cms/his/get/' + id)
+                    .then(function (res) {
+                        if ($.isEmptyObject(res)) {
+                            deferred.reject();
+                        } else {
+                            deferred.resolve(res.data);
+                        }
+                    }, function () {
+                        deferred.reject();
+                        window.location.href = "/cms/"
+                    });
+                return deferred.promise;
+            },
+            save_his: function(obj) {
+                var deferred = $q.defer();
+                $http.post('/cms/his/save', JSON.stringify(obj))
+                    .then(function (res) {
+                        if ($.isEmptyObject(res)) {
+                            deferred.reject();
+                        } else {
+                            deferred.resolve(res.data);
+                        }
+                    }, function () {
+                        deferred.reject();
+                    });
+
+                return deferred.promise;
+            },
             getAllHis: function (datapage) {
                 if (!datapage) {
                     datapage = 0;
@@ -270,7 +313,6 @@ angular.module('services').factory('CourseService', ['$q', '$http',
                         if ($.isEmptyObject(res)) {
                             deferred.reject();
                         } else {
-                            His = res.data;
                             deferred.resolve(res.data);
                         }
                     }, function () {
@@ -290,32 +332,12 @@ angular.module('services').factory('CourseService', ['$q', '$http',
                         if ($.isEmptyObject(res)) {
                             deferred.reject();
                         } else {
-                            Lives = res.data;
                             deferred.resolve(res.data);
                         }
                     }, function () {
                         deferred.reject();
                         window.location.href = "/cms/"
                     });
-
-                return deferred.promise;
-            },
-            getLiveById: function (ids) {
-                var deferred = $q.defer();
-
-                if ($.isEmptyObject(Lives)) {
-                    this.getLiveRemote(ids).then(function (retdata) {
-                        deferred.resolve(retdata);
-                    });
-                } else {
-                    var ret = null;
-                    $.each(Lives.data, function (idx, tmp) {
-                        if (ids == tmp.id) {
-                            ret = tmp;
-                        }
-                    });
-                    deferred.resolve(ret);
-                }
 
                 return deferred.promise;
             }

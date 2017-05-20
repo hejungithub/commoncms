@@ -5,7 +5,9 @@
     </ol>
     <div class="panel panel-default">
         <div class="panel-heading">
-            直播课程
+            <button class="btn btn-primary" ng-click="ok()">
+                添加课程
+            </button>
         </div>
         <div class="panel-body">
             <table class="table table-striped">
@@ -20,9 +22,9 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="u in lives">
-                    <td><a ui-sref="home.livecourseedit({id: u.id })">{{u.id}}</a></td>
+                    <td>{{u.id}}</td>
                     <td>{{u.lecturer}}</td>
-                    <td>{{u.content}}</td>
+                    <td><a ui-sref="home.livecourseedit({id: u.id })">{{u.content | limitTo: 20}}</a></td>
                     <td>{{u.starttime}}</td>
                     <td>{{u.endtime}}</td>
                 </tr>

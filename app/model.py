@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, Float, String, DateTime, Numeric
 from sqlalchemy.ext.declarative import declarative_base
+from datetime import datetime
 
 """
 实体表对象，定义模型与表的映射关系
@@ -8,10 +9,11 @@ from sqlalchemy.ext.declarative import declarative_base
 
 
 def convert_datetime(value):
-    if value:
-        return value.strftime("%Y-%m-%d %H:%M:%S")
+    if isinstance(value, str):
+        tt = datetime.strptime(value, "%Y-%m-%d %H:%M:%S")
+        return tt
     else:
-        return ""
+        return value.strftime("%Y-%m-%d %H:%M:%S")
 
 
 def to_dict(self):
@@ -27,11 +29,22 @@ def to_dict(self):
     return ret
 
 
+def merge(self, obj):
+    for col in self.__table__.columns:
+        if isinstance(col.type, DateTime):
+            setattr(self, col.name, convert_datetime(obj[col.name]))
+        elif isinstance(col.type, Numeric):
+            setattr(self, col.name, float(obj[col.name]))
+        else:
+            setattr(self, col.name, obj[col.name])
+
+
 # db model base
 # add to_dict parse json
 Base = declarative_base()
 
 Base.to_dict = to_dict
+Base.merge = merge
 
 
 class User(Base):

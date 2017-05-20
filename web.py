@@ -150,9 +150,33 @@ def act_live_get_all(page):
     return json.dumps(DAO.allRecord(page, model.LiveCourse))
 
 
+@app.route("/live/get/<cid>", methods=['GET'])
+def act_live_get_cid(cid):
+    return json.dumps(DAO.getLive(int(cid)))
+
+
+@app.route("/live/save", methods=['POST'])
+def act_live_save():
+    para = request.get_data().decode()
+    ddict = json.loads(para)
+    return json.dumps(DAO.saveLive(ddict))
+
+
 @app.route("/his/all/<page>", methods=['GET'])
 def act_his_get_all(page):
     return json.dumps(DAO.allRecord(page, model.HisCourse))
+
+
+@app.route("/his/get/<cid>", methods=['GET'])
+def act_his_get_cid(cid):
+    return json.dumps(DAO.getHis(int(cid)))
+
+
+@app.route("/his/save", methods=['POST'])
+def act_his_save():
+    para = request.get_data().decode()
+    ddict = json.loads(para)
+    return json.dumps(DAO.saveHis(ddict))
 
 
 @app.route("/user/all/<page>", methods=['GET'])

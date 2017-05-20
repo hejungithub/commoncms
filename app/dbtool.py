@@ -122,6 +122,70 @@ class DataDB:
             ses.close()
             return {}
 
+    def getLive(self, cid):
+        ses = self.takeSes()
+        try:
+            course = ses.query(LiveCourse).filter(LiveCourse.id == cid).one()
+            retu = course.to_dict()
+            ses.close()
+            return retu
+
+        except Exception as err:
+            logger.info(err)
+            ses.close()
+            return {}
+
+    def saveLive(self, obj):
+        ses = self.takeSes()
+        try:
+            result = ses.query(LiveCourse).filter(LiveCourse.id == obj['id']).one_or_none()
+            if result:
+                course = LiveCourse()
+                course.merge(obj)
+                ses.merge(course)
+                ses.commit()
+                ses.close()
+
+                return course.to_dict()
+
+        except Exception as err:
+            logger.info(err)
+            ses.rollback()
+            ses.close()
+            return {}
+
+    def getHis(self, cid):
+        ses = self.takeSes()
+        try:
+            course = ses.query(HisCourse).filter(HisCourse.id == cid).one()
+            retu = course.to_dict()
+            ses.close()
+            return retu
+
+        except Exception as err:
+            logger.info(err)
+            ses.close()
+            return {}
+
+    def saveHis(self, obj):
+        ses = self.takeSes()
+        try:
+            result = ses.query(HisCourse).filter(HisCourse.id == obj['id']).one_or_none()
+            if result:
+                course = HisCourse()
+                course.merge(obj)
+                ses.merge(course)
+                ses.commit()
+                ses.close()
+
+                return course.to_dict()
+
+        except Exception as err:
+            logger.info(err)
+            ses.rollback()
+            ses.close()
+            return {}
+
     def changeadmin(self, obj):
         ses = self.takeSes()
         try:

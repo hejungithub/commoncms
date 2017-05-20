@@ -1,24 +1,17 @@
 <div class="row" style="height:400px;">
     <div class="panel-group" id="accordion">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <ol class="breadcrumb">
-                    <li><a href="#" ui-sref="home">首页</a></li>
-                    <li><a href="#" ui-sref="home.userlist">用户列表</a></li>
-                    <li class="active">用户详情</li>
-                </ol>
-                <a class="btn btn-primary" href="#" ui-sref="home.useredit({id: user.id })" role="button">编辑用户</a>
-            </div>
-        </div>
+        <ol class="breadcrumb">
+            <li><a href="#" ui-sref="home">首页</a></li>
+            <li><a href="#" ui-sref="home.userlist">用户列表</a></li>
+            <li class="active">用户详情</li>
+        </ol>
 
         <div class="panel panel-default">
             <div class="panel-heading" data-toggle="collapse"
                  data-parent="#accordion"
                  data-target="#collapseOne">
                 <h4 class="panel-title">
-                    <a href="javascript:;" class="text-warning">
-                        用户信息
-                    </a>
+                    <a class="text-primary" href="#" ui-sref="home.useredit({id: user.id })" role="button">编辑</a>
                 </h4>
             </div>
             <div id="collapseOne" class="panel-collapse collapse in">
@@ -86,9 +79,7 @@
                  data-parent="#accordion"
                  data-target="#collapseTwo">
                 <h4 class="panel-title">
-                    <a href="javascript:;" class="text-warning">
-                        用户MT4信息
-                    </a>
+                    用户MT4信息
                 </h4>
             </div>
             <div id="collapseTwo" class="panel-collapse collapse">
@@ -129,9 +120,7 @@
                  data-parent="#accordion"
                  data-target="#collapseFour">
                 <h4 class="panel-title">
-                    <a href="javascript:;" class="text-warning">
-                        用户备注
-                    </a>
+                    用户备注
                 </h4>
             </div>
             <div id="collapseFour" class="panel-collapse collapse">

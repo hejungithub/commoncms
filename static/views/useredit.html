@@ -1,13 +1,12 @@
 <div class="row" style="height:400px;">
+    <ol class="breadcrumb">
+        <li><a href="#" ui-sref="home">首页</a></li>
+        <li><a href="#" ui-sref="home.userlist">用户列表</a></li>
+        <li><a href="#" ui-sref="home.userdetail({id: user.id })">用户详情</a></li>
+        <li class="active">编辑</li>
+    </ol>
+
     <div class="panel panel-default">
-        <div class="panel-heading">
-            <ol class="breadcrumb">
-                <li><a href="#" ui-sref="home">首页</a></li>
-                <li><a href="#" ui-sref="home.userlist">用户列表</a></li>
-                <li><a href="#" ui-sref="home.userdetail({id: user.id })">用户详情</a></li>
-                <li class="active">编辑</li>
-            </ol>
-        </div>
         <div class="panel-body">
             <form class="form-horizontal" role="form">
                 <div class="form-group">

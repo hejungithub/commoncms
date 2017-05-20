@@ -157,6 +157,22 @@ angular.module('controllers').controller('LiveCourseController', ['$http', '$sco
     }
 ]);
 
+angular.module('controllers').controller('LiveCourseEditController', ['$http', '$scope', '$state', '$stateParams', 'CourseService',
+    function ($http, $scope, $state, $stateParams, CourseService) {
+        'use strict';
+        CourseService.getLiveById($stateParams.id).then(function(tmp){
+            $scope.course = tmp
+        });
+
+
+        $scope.save_live = function() {
+            CourseService.save_live($scope.course).then(function(){
+                $state.go('home.livecourse')
+            });
+        }
+    }
+]);
+
 
 
 angular.module('controllers').controller('HisCourseController', ['$http', '$scope', 'CourseService', 'Hiss',
@@ -179,6 +195,23 @@ angular.module('controllers').controller('HisCourseController', ['$http', '$scop
         };
     }
 ]);
+
+angular.module('controllers').controller('HisCourseEditController', ['$http', '$scope', '$state', '$stateParams', 'CourseService',
+    function ($http, $scope, $state, $stateParams, CourseService) {
+        'use strict';
+        CourseService.getHisById($stateParams.id).then(function(tmp){
+            $scope.course = tmp
+        });
+
+
+        $scope.save_his = function() {
+            CourseService.save_his($scope.course).then(function(){
+                $state.go('home.hiscourse')
+            });
+        }
+    }
+]);
+
 
 angular.module('controllers').controller('MT4recommendController', ['$http', '$scope', 'UserService', 'MT4', 'MT4RECOMMEND',
     function ($http, $scope,UserService, MT4, MT4RECOMMEND) {
