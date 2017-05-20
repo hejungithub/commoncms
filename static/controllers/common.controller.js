@@ -13,57 +13,6 @@ angular.module('controllers').controller('HeadController', ['$http', '$rootScope
     }
 ]);
 
-angular.module('controllers').controller('SearchController', ['$http', '$scope', 'SearchService',
-    function ($http, $scope, SearchService) {
-        'use strict';
-        $scope.name = "";
-        $scope.tel = "";
-
-        $scope.users = {};
-        $scope.size = {};
-        $scope.currentPage = 0;
-        $scope.totalItems = {};
-        $scope.maxSize = 5;
-
-        $scope.pageChanged = function () {
-            var pa = {
-                name : $scope.name,
-                tel : $scope.tel,
-                cur: $scope.currentPage
-            };
-            SearchService.dosearch(pa).then(function (tmp) {
-                if($.isEmptyObject(tmp)){
-                }else{
-                    $scope.users = tmp.data;
-                    $scope.size = tmp.persize;
-                    $scope.currentPage = tmp.cur;
-                    $scope.totalItems = tmp.total;
-                    $scope.maxSize = 5;
-                }
-            });
-        };
-
-        $scope.dosearch = function(){
-            var pa = {
-                name : $scope.name,
-                tel : $scope.tel,
-                cur : $scope.currentPage
-            };
-            SearchService.dosearch(pa).then(function(tmp){
-                if($.isEmptyObject(tmp)){
-                }else{
-                    $scope.users = tmp.data;
-                    $scope.size = tmp.persize;
-                    $scope.currentPage = tmp.cur;
-                    $scope.totalItems = tmp.total;
-                    $scope.maxSize = 5;
-                }
-            },function(){
-            });
-        }
-    }
-]);
-
 angular.module('controllers').controller('NavController', ['$http', '$scope', 'NavService', 'Nav',
     function ($http, $scope, NavService, Nav) {
         'use strict';
@@ -97,24 +46,69 @@ angular.module('controllers').controller('AdminChangeController', ['$http', '$ro
     }
 ]);
 
-angular.module('controllers').controller('UserListController', ['$http', '$scope', 'UserService', 'Users',
-    function ($http, $scope, UserService, Users) {
+angular.module('controllers').controller('UserListController', ['$http', '$scope', 'SystemService',
+    function ($http, $scope, SystemService) {
         'use strict';
-        $scope.users = Users.data;
-        $scope.size = Users.persize;
-        $scope.currentPage = Users.cur;
-        $scope.totalItems = Users.total;
+
+        $scope.types = {
+            "用户名" : "name",
+            "手机" : "tel"
+        };
+
+        $scope.cond = "tel";
+        $scope.condval = "";
+        $scope.users = {};
+        $scope.size = {};
+        $scope.currentPage = 0;
+        $scope.totalItems = {};
         $scope.maxSize = 5;
 
         $scope.pageChanged = function () {
-            UserService.getAllUser($scope.currentPage).then(function (tmp) {
-                $scope.users = tmp.data;
-                $scope.size = tmp.persize;
-                $scope.currentPage = tmp.cur;
-                $scope.totalItems = tmp.total;
-                $scope.maxSize = 5;
+            var pa = {};
+            pa.cur = $scope.currentPage;
+
+            if($scope.cond == "tel"){
+                pa.tel = $scope.condval;
+            }else{
+                pa.name = $scope.condval;
+            }
+
+            SystemService.dosearch(pa).then(function (tmp) {
+                if($.isEmptyObject(tmp)){
+                }else{
+                    $scope.users = tmp.data;
+                    $scope.size = tmp.persize;
+                    $scope.currentPage = tmp.cur;
+                    $scope.totalItems = tmp.total;
+                    $scope.maxSize = 5;
+                }
             });
         };
+
+        $scope.dosearch = function(){
+            var pa = {};
+            pa.cur = $scope.currentPage;
+
+            if($scope.cond == "tel"){
+                pa.tel = $scope.condval;
+            }else{
+                pa.name = $scope.condval;
+            }
+
+            SystemService.dosearch(pa).then(function(tmp){
+                if($.isEmptyObject(tmp)){
+                }else{
+                    $scope.users = tmp.data;
+                    $scope.size = tmp.persize;
+                    $scope.currentPage = tmp.cur;
+                    $scope.totalItems = tmp.total;
+                    $scope.maxSize = 5;
+                }
+            },function(){
+            });
+        };
+
+        $scope.dosearch();
     }
 ]);
 

@@ -22,7 +22,6 @@
                     <table class="table table-striped">
                         <thead>
                         <tr>
-                            <th>MT4ID</th>
                             <th>策略名</th>
                             <th>账户资金</th>
                             <th>日均单量</th>
@@ -34,7 +33,6 @@
                         </thead>
                         <tbody>
                         <tr ng-repeat="ret in remt4">
-                            <td>{{ret.Mt4ID}}</td>
                             <td>{{ret.SName}}</td>
                             <td>{{ret.Balance}}</td>
                             <td>{{ret.AvgDayCount}}</td>
@@ -102,7 +100,6 @@
                         <tr>
                             <th>用户名</th>
                             <th>昵称</th>
-                            <th>MT4ID</th>
                             <th>ACCOUNT</th>
                             <th>策略名</th>
                             <th>加入推荐</th>
@@ -112,7 +109,6 @@
                         <tr ng-repeat="u in mt4">
                             <td>{{u.name}}</td>
                             <td>{{u.nickname}}</td>
-                            <td>{{u.mt4id}}</td>
                             <td>{{u.ACCOUNT}}</td>
                             <td>{{u.SNAME}}</td>
                             <td><input type="button" ng-click="doadd(u)" class="btn btn-primary" value="添加" /></td>

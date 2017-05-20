@@ -149,7 +149,9 @@ class DataDB:
             ad = query.limit(10).offset(int(pdict['cur']) * 10).all()
             alls = query.all()
             if len(ad) == 0:
-                raise BaseException
+                ses.close()
+                return {}
+
             else:
                 allsize = len(alls)
                 ret = {

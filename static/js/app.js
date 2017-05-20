@@ -9,9 +9,9 @@ angular.module('routeApp', [
     'ui.bootstrap',
     'controllers',
     'services'
-]).config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
+]).config(['$stateProvider', '$urlRouterProvider',
+    function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/');
-
     $stateProvider
         .state('home', {
             url:'/',
@@ -32,16 +32,6 @@ angular.module('routeApp', [
             resolve: {
                 Admin: ['AdminService', function (resolve) { return resolve.getAdminInfo();}],
                 Nav: ['NavService', function (resolve) { return resolve.getNavInfo();}]
-            }
-        })
-
-        .state('home.search', {
-            url:'search',
-            views: {
-                'rtcontent@': {
-                    templateUrl: '/cms/static/views/search.html',
-                    controller: 'SearchController'
-                }
             }
         })
 
@@ -111,6 +101,16 @@ angular.module('routeApp', [
             }
         })
 
+        .state('home.livecourseedit', {
+            url:'course/live/edit/:id',
+            views: {
+                'rtcontent@': {
+                    templateUrl: '/cms/static/views/livecourseedit.html',
+                    controller: 'LiveCourseEditController'
+                }
+            }
+        })
+
         .state('home.hiscourse', {
             url:'course/his',
             views: {
@@ -121,6 +121,16 @@ angular.module('routeApp', [
             },
             resolve: {
                 Hiss: ['CourseService', function (resolve) { return resolve.getAllHis();}]
+            }
+        })
+
+        .state('home.hiscourseedit', {
+            url:'course/his/edit/:id',
+            views: {
+                'rtcontent@': {
+                    templateUrl: '/cms/static/views/hiscourseedit.html',
+                    controller: 'HisCourseEditController'
+                }
             }
         })
 

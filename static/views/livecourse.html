@@ -11,6 +11,7 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
+                    <th>序号</th>
                     <th>讲师</th>
                     <th>内容</th>
                     <th>开始时间</th>
@@ -19,6 +20,7 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="u in lives">
+                    <td><a ui-sref="home.livecourseedit({id: u.id })">{{u.id}}</a></td>
                     <td>{{u.lecturer}}</td>
                     <td>{{u.content}}</td>
                     <td>{{u.starttime}}</td>

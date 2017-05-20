@@ -9,6 +9,24 @@
             用户列表
         </div>
         <div class="panel-body">
+            <form class="form-inline " role="form">
+                <div class="form-group">
+                    <select class="form-control"
+                            ng-model="cond" ng-options="x for (x, y) in types">
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <input type="text" class="form-control" ng-model="condval"/>
+                </div>
+
+                <div class="form-group">
+                    <input type="button" ng-click="dosearch()" class="btn btn-primary" value="查询"/>
+                </div>
+            </form>
+        </div>
+
+        <div class="panel-body">
             <table class="table table-striped">
                 <thead>
                 <tr>
