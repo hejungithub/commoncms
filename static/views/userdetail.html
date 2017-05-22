@@ -6,6 +6,29 @@
             <li class="active">用户详情</li>
         </ol>
 
+        <div class="panel-heading">
+            <span ng-if="user.reverse == 0">
+                <button class="btn btn-primary" ng-click="fan()">
+                    开启反向
+                </button>
+            </span>
+            <span ng-if="user.reverse == 1">
+                <button class="btn btn-primary" ng-click="fan()">
+                    关闭反向
+                </button>
+            </span>
+            <span ng-if="user.pay == 0">
+                <button class="btn btn-primary" ng-click="zhifu()">
+                    开启支付
+                </button>
+            </span>
+            <span ng-if="user.pay == 1">
+                <button class="btn btn-primary" ng-click="zhifu()">
+                    关闭支付
+                </button>
+            </span>
+        </div>
+
         <div class="panel panel-default">
             <div class="panel-heading" data-toggle="collapse"
                  data-parent="#accordion"

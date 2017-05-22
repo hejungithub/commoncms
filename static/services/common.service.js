@@ -114,6 +114,36 @@ angular.module('services').factory('NavService', ['$q', '$http',
 angular.module('services').factory('UserService', ['$q', '$http',
     function ($q, $http) {
         return {
+            fan:function(id){
+                var deferred = $q.defer();
+                $http.get('/cms/user/fan/' + id)
+                    .then(function (res) {
+                        if ($.isEmptyObject(res)) {
+                            window.location.href = "/cms/";
+                        } else {
+                            deferred.resolve(res.data);
+                        }
+                    }, function () {
+                        deferred.reject();
+                        window.location.href = "/cms/"
+                    });
+                return deferred.promise;
+            },
+            zhifu:function(id){
+                var deferred = $q.defer();
+                $http.get('/cms/user/zhifu/' + id)
+                    .then(function (res) {
+                        if ($.isEmptyObject(res)) {
+                            window.location.href = "/cms/";
+                        } else {
+                            deferred.resolve(res.data);
+                        }
+                    }, function () {
+                        deferred.reject();
+                        window.location.href = "/cms/"
+                    });
+                return deferred.promise;
+            },
             getUserRemote: function (id) {
                 var deferred = $q.defer();
                 $http.get('/cms/user/get/' + id)

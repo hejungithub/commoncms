@@ -62,6 +62,8 @@ class User(Base):
     qiaomoney = Column(Float)
     tel = Column(String(200))
     updatetime = Column(DateTime)
+    pay = Column(Integer)
+    reverse = Column(Integer)
 
 
 class Admin(Base):

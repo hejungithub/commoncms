@@ -82,6 +82,46 @@ class DataDB:
                 pass
         return des
 
+    def zhifu(self, uid):
+        ses = self.takeSes()
+        try:
+            user = ses.query(User).filter(User.id == uid).one()
+            if user.pay == 0:
+                user.pay = 1
+            else:
+                user.pay = 0
+
+            ret = user.to_dict()
+            ses.merge(user)
+            ses.commit()
+            ses.close()
+            return ret
+
+        except Exception as err:
+            logger.info(err)
+            ses.close()
+            return {}
+
+    def fan(self, uid):
+        ses = self.takeSes()
+        try:
+            user = ses.query(User).filter(User.id == uid).one()
+            if user.reverse == 0:
+                user.reverse = 1
+            else:
+                user.reverse = 0
+
+            ret = user.to_dict()
+            ses.merge(user)
+            ses.commit()
+            ses.close()
+            return ret
+
+        except Exception as err:
+            logger.info(err)
+            ses.close()
+            return {}
+
     def getUser(self, uid):
         ses = self.takeSes()
         try:

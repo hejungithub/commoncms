@@ -112,8 +112,8 @@ angular.module('controllers').controller('UserListController', ['$http', '$scope
     }
 ]);
 
-angular.module('controllers').controller('UserDetailController', ['$http', '$scope', '$stateParams', 'UserService',
-    function ($http, $scope, $stateParams, UserService) {
+angular.module('controllers').controller('UserDetailController', ['$http', '$scope', '$state', '$stateParams', 'UserService',
+    function ($http, $scope,$state, $stateParams, UserService) {
         'use strict';
         UserService.getUserById($stateParams.id).then(function(data){
             $scope.user = data;
@@ -121,6 +121,16 @@ angular.module('controllers').controller('UserDetailController', ['$http', '$sco
         UserService.getMt4strategyById($stateParams.id).then(function(data){
             $scope.mt4strategy = data;
         });
+        $scope.fan = function(){
+            UserService.fan($scope.user.id).then(function(){
+                location.reload()
+            })
+        };
+        $scope.zhifu = function(){
+            UserService.zhifu($scope.user.id).then(function(){
+                location.reload()
+            })
+        };
     }
 ]);
 
@@ -216,7 +226,7 @@ angular.module('controllers').controller('HisCourseEditController', ['$http', '$
 angular.module('controllers').controller('MT4recommendController', ['$http', '$scope', 'UserService', 'MT4', 'MT4RECOMMEND',
     function ($http, $scope,UserService, MT4, MT4RECOMMEND) {
         'use strict';
-
+        console.log(MT4);
         if(!$.isEmptyObject(MT4)){
             $scope.mt4 = MT4.data;
             $scope.size = MT4.persize;

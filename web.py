@@ -64,6 +64,16 @@ def act_user_get(uid):
     return json.dumps(DAO.getUser(uid))
 
 
+@app.route("/user/zhifu/<uid>", methods=['GET'])
+def act_user_zhifu(uid):
+    return json.dumps(DAO.zhifu(uid))
+
+
+@app.route("/user/fan/<uid>", methods=['GET'])
+def act_user_fan(uid):
+    return json.dumps(DAO.fan(uid))
+
+
 @app.route("/mt4strategy/get/<uid>", methods=['GET'])
 def act_mt4strategy_get(uid):
     try:
@@ -111,6 +121,21 @@ def act_mt4recommend_get_all(page):
 
 @app.route("/mt4strategy/save", methods=['POST'])
 def act_mt4recommend_save():
+    para = request.get_data().decode()
+    pdict = json.loads(para)
+    obj = DAO.addMT4recommend(pdict)
+    if obj:
+        upret = service_api('action=UpdateInside', {"mt4id": obj['mt4id'], "innerAccount": "1"})
+        if getattr(upret, 'errMsg', None):
+            return json.dumps(obj)
+        else:
+            return json.dumps({})
+    else:
+        return json.dumps({})
+
+
+@app.route("/mt4strategy/cancel/<mt4id>", methods=['GET'])
+def act_mt4recommend_cancel():
     para = request.get_data().decode()
     pdict = json.loads(para)
     obj = DAO.addMT4recommend(pdict)
