@@ -9,11 +9,14 @@ from datetime import datetime
 
 
 def convert_datetime(value):
-    if isinstance(value, str):
-        tt = datetime.strptime(value, "%Y-%m-%d %H:%M:%S")
-        return tt
+    if value:
+        if isinstance(value, str):
+            tt = datetime.strptime(value, "%Y-%m-%d %H:%M:%S")
+            return tt
+        else:
+            return value.strftime("%Y-%m-%d %H:%M:%S")
     else:
-        return value.strftime("%Y-%m-%d %H:%M:%S")
+        return None
 
 
 def to_dict(self):
@@ -107,16 +110,7 @@ class MT4follow(Base):
     id = Column(Integer, primary_key=True)
     uid = Column(Integer)
     mt4id = Column(String(200))
-    smt4id = Column(String(200))
     createtime = Column(DateTime)
-
-
-class MT4recommend(Base):
-    __tablename__ = 'mt4recommend'
-    id = Column(Integer, primary_key=True)
-    uid = Column(Integer)
-    uname = Column(String(200))
-    mt4id = Column(String(200))
 
 
 class Bank(Base):

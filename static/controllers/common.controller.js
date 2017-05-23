@@ -122,7 +122,13 @@ angular.module('controllers').controller('UserDetailController', ['$http', '$sco
             $scope.mt4strategy = data;
         });
         $scope.fan = function(){
-            UserService.fan($scope.user.id).then(function(){
+            if($scope.user.reverse == 1){
+                $scope.user.reverse = 0
+            }else{
+                $scope.user.reverse = 1
+            }
+
+            UserService.fan($scope.user).then(function(){
                 location.reload()
             })
         };
@@ -258,7 +264,6 @@ angular.module('controllers').controller('HisCourseAddController', ['$http', '$s
 angular.module('controllers').controller('MT4recommendController', ['$http', '$scope', 'UserService', 'MT4', 'MT4RECOMMEND',
     function ($http, $scope,UserService, MT4, MT4RECOMMEND) {
         'use strict';
-        console.log(MT4);
         if(!$.isEmptyObject(MT4)){
             $scope.mt4 = MT4.data;
             $scope.size = MT4.persize;
@@ -278,29 +283,20 @@ angular.module('controllers').controller('MT4recommendController', ['$http', '$s
 
             $scope.doadd = function(obj) {
                 UserService.saveMt4recommend(obj).then(function(){
-                    window.location.reload(true);
+                    location.reload();
                 })
             };
+
+            $scope.doremove = function(obj) {
+                UserService.removeMt4recommend(obj).then(function(){
+                    location.reload();
+                })
+            }
         }
 
         if(!$.isEmptyObject(MT4RECOMMEND)){
             $scope.remt4 = MT4RECOMMEND.data;
-            $scope.resize = MT4RECOMMEND.persize;
-            $scope.recurrentPage = MT4RECOMMEND.cur;
-            $scope.retotalItems = MT4RECOMMEND.total;
-            $scope.remaxSize = 5;
-
-            $scope.repageChanged = function () {
-                UserService.getMt4Recommend($scope.recurrentPage).then(function (tmp) {
-                    $scope.remt4 = tmp.data;
-                    $scope.resize = tmp.persize;
-                    $scope.recurrentPage = tmp.cur;
-                    $scope.retotalItems = tmp.total;
-                    $scope.remaxSize = 5;
-                });
-            };
         }
-
     }
 ]);
 

@@ -4,7 +4,7 @@
 from sqlalchemy import create_engine, and_
 from sqlalchemy.orm import sessionmaker
 from app.model import Base, Admin, User, LiveCourse, \
-    HisCourse, MT4strategy, MT4recommend, MT4follow, Bank, Tixian, Msg
+    HisCourse, MT4strategy, MT4follow, Bank, Tixian, Msg
 
 from app.utils import logger
 import datetime
@@ -102,25 +102,26 @@ class DataDB:
             ses.close()
             return {}
 
-    def fan(self, uid):
+    def fan(self, obj):
+        data = []
         ses = self.takeSes()
         try:
-            user = ses.query(User).filter(User.id == uid).one()
-            if user.reverse == 0:
-                user.reverse = 1
-            else:
-                user.reverse = 0
+            usr = ses.query(User).filter(User.id == obj['uid']).one()
+            if usr:
+                usr.reverse = obj['state']
+                ses.merge(usr)
+                ses.commit()
 
-            ret = user.to_dict()
-            ses.merge(user)
-            ses.commit()
-            ses.close()
-            return ret
+            rets = ses.query(User, MT4follow).filter(and_(User.id == obj['uid'], MT4follow.uid == obj['uid'])).all()
+            if rets:
+                data = self.list2todict(rets),
+
+            return data
 
         except Exception as err:
             logger.info(err)
             ses.close()
-            return {}
+            return data
 
     def getUser(self, uid):
         ses = self.takeSes()
@@ -391,12 +392,10 @@ class DataDB:
         ses = self.takeSes()
         try:
             query = ses.query(User, MT4strategy).filter(User.id == MT4strategy.uid)
-            subquery = ses.query(MT4recommend.mt4id)
 
-            rets = query.filter(MT4strategy.mt4id.notin_(subquery)) \
-                .limit(10).offset(tmppage * 10).all()
+            rets = query.limit(10).offset(tmppage * 10).all()
 
-            alls = query.filter(MT4strategy.mt4id.notin_(subquery)).all()
+            alls = query.all()
 
             if len(rets) == 0:
                 raise BaseException
@@ -432,60 +431,6 @@ class DataDB:
 
         except Exception as err:
             logger.info(err)
-            ses.close()
-            return {}
-
-    def addMT4recommend(self, obj):
-        ses = self.takeSes()
-        new_mt4 = MT4recommend()
-        new_mt4.mt4id = obj['mt4id']
-        new_mt4.uid = obj['uid']
-        new_mt4.uname = obj['uname']
-        try:
-            # 添加到session:
-            ses.add(new_mt4)
-            ret = new_mt4.to_dict()
-            ses.commit()
-            ses.close()
-            return ret
-
-        except Exception as err:
-            logger.info(err)
-            ses.rollback()
-            ses.close()
-            return {}
-
-    def allRecordMT4Recommend(self, page):
-        tmppage = int(page)
-        if tmppage > 0:
-            tmppage -= 1
-
-        ses = self.takeSes()
-        try:
-            query = ses.query(MT4recommend).filter(MT4recommend.id != -1)
-
-            rets = query.limit(10).offset(tmppage * 10).all()
-
-            alls = query.all()
-
-            if len(rets) == 0:
-                raise BaseException
-            else:
-                allsize = len(alls)
-                ret = {
-                    'total': allsize,
-                    'page': round(allsize / 10),
-                    'cur': page,
-                    'data': self.listtodict(rets),
-                    'persize': 10
-                }
-                ses.commit()
-                ses.close()
-                return ret
-
-        except Exception as err:
-            logger.info(err)
-            ses.rollback()
             ses.close()
             return {}
 

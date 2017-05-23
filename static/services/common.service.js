@@ -114,18 +114,15 @@ angular.module('services').factory('NavService', ['$q', '$http',
 angular.module('services').factory('UserService', ['$q', '$http',
     function ($q, $http) {
         return {
-            fan:function(id){
+            fan:function(usr){
+                para = {
+                    "uid":usr.id,
+                    "state":usr.reverse
+                };
                 var deferred = $q.defer();
-                $http.get('/cms/user/fan/' + id)
+                $http.post('/cms/user/fan',JSON.stringify(para))
                     .then(function (res) {
-                        if ($.isEmptyObject(res)) {
-                            window.location.href = "/cms/";
-                        } else {
-                            deferred.resolve(res.data);
-                        }
-                    }, function () {
-                        deferred.reject();
-                        window.location.href = "/cms/"
+                        deferred.resolve(res.data);
                     });
                 return deferred.promise;
             },
@@ -242,12 +239,25 @@ angular.module('services').factory('UserService', ['$q', '$http',
 
                 return deferred.promise;
             },
-            getMt4Recommend: function (datapage) {
-                if (!datapage) {
-                    datapage = 0;
-                }
+            removeMt4recommend: function (obj) {
                 var deferred = $q.defer();
-                $http.get('/cms/mt4recommend/all/' + datapage)
+                $http.get('/cms/mt4strategy/cancel/' + obj.Mt4ID)
+                    .then(function (res) {
+                        if ($.isEmptyObject(res)) {
+                            deferred.reject();
+                            window.location.href = "/cms/"
+                        } else {
+                            deferred.resolve(res.data);
+                        }
+                    }, function () {
+                        deferred.reject();
+                    });
+
+                return deferred.promise;
+            },
+            getMt4Recommend: function () {
+                var deferred = $q.defer();
+                $http.get('/cms/mt4recommend/all')
                     .then(function (res) {
                         if ($.isEmptyObject(res)) {
                             deferred.reject();
