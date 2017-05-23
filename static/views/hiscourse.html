@@ -6,7 +6,7 @@
 
     <div class="panel panel-default">
         <div class="panel-heading">
-            <button class="btn btn-primary" ng-click="ok()">
+            <button class="btn btn-primary" ui-sref="home.hiscourseadd">
                 添加课程
             </button>
         </div>
@@ -20,6 +20,7 @@
                     <th>地址</th>
                     <th>开始时间</th>
                     <th>结束时间</th>
+                    <th>删除</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -30,6 +31,9 @@
                     <td>{{u.url}}</td>
                     <td>{{u.starttime}}</td>
                     <td>{{u.endtime}}</td>
+                    <td>
+                        <button class="btn btn-sm" ng-click="delHisById(u.id)">删除</button>
+                    </td>
                 </tr>
                 </tbody>
             </table>

@@ -194,6 +194,27 @@ class DataDB:
             ses.close()
             return {}
 
+    def addLive(self, obj):
+        ses = self.takeSes()
+        try:
+            live = LiveCourse()
+            if obj:
+                live.merge(obj)
+                ret = live.to_dict()
+                ses.add(live)
+                ses.commit()
+                ses.close()
+                return ret
+            else:
+                ses.close()
+                return {}
+
+        except Exception as err:
+            logger.info(err)
+            ses.rollback()
+            ses.close()
+            return {}
+
     def getHis(self, cid):
         ses = self.takeSes()
         try:
@@ -219,6 +240,27 @@ class DataDB:
                 ses.close()
 
                 return course.to_dict()
+
+        except Exception as err:
+            logger.info(err)
+            ses.rollback()
+            ses.close()
+            return {}
+
+    def addHis(self, obj):
+        ses = self.takeSes()
+        try:
+            his = HisCourse()
+            if obj:
+                his.merge(obj)
+                ret = his.to_dict()
+                ses.add(his)
+                ses.commit()
+                ses.close()
+                return ret
+            else:
+                ses.close()
+                return {}
 
         except Exception as err:
             logger.info(err)
@@ -268,6 +310,42 @@ class DataDB:
                 ses.commit()
                 ses.close()
                 return ret
+
+        except Exception as err:
+            logger.info(err)
+            ses.rollback()
+            ses.close()
+            return {}
+
+    def delLive(self, liveid):
+        ses = self.takeSes()
+        try:
+            rets = ses.query(LiveCourse).filter(LiveCourse.id == liveid).one()
+            if rets:
+                ses.delete(rets)
+                ses.commit()
+                ses.close()
+            else:
+                ses.close()
+                return {}
+
+        except Exception as err:
+            logger.info(err)
+            ses.rollback()
+            ses.close()
+            return {}
+
+    def delHis(self, hisid):
+        ses = self.takeSes()
+        try:
+            rets = ses.query(HisCourse).filter(HisCourse.id == hisid).one()
+            if rets:
+                ses.delete(rets)
+                ses.commit()
+                ses.close()
+            else:
+                ses.close()
+                return {}
 
         except Exception as err:
             logger.info(err)

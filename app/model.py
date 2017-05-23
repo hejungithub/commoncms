@@ -31,6 +31,8 @@ def to_dict(self):
 
 def merge(self, obj):
     for col in self.__table__.columns:
+        if col.name == 'id':
+            continue
         if isinstance(col.type, DateTime):
             setattr(self, col.name, convert_datetime(obj[col.name]))
         elif isinstance(col.type, Numeric):

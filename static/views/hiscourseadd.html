@@ -1,0 +1,54 @@
+<div class="row" style="height:400px;">
+    <ol class="breadcrumb">
+        <li><a href="#" ui-sref="home">首页</a></li>
+        <li><a href="#" ui-sref="home.hiscourse">历史课程</a></li>
+        <li class="active">添加</li>
+    </ol>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <form class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">讲师</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" ng-model="course.lecturer" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">链接</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" ng-model="course.url" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">内容</label>
+                    <div class="col-sm-6">
+                        <textarea class="form-control" rows="10" ng-model="course.content"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">开始时间</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" ng-model="course.starttime"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">结束时间</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" ng-model="course.endtime"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-4">
+                        <button class="btn btn-primary" ng-click="add_his()">
+                            提交
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <br/>
+            <br/>
+        </div>
+    </div>
+</div>

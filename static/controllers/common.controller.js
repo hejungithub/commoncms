@@ -164,6 +164,11 @@ angular.module('controllers').controller('LiveCourseController', ['$http', '$sco
                 $scope.maxSize = 5;
             });
         };
+        $scope.delLiveById = function(tid) {
+            CourseService.delLiveById(tid).then(function(){
+                location.reload()
+            })
+        }
     }
 ]);
 
@@ -177,6 +182,17 @@ angular.module('controllers').controller('LiveCourseEditController', ['$http', '
 
         $scope.save_live = function() {
             CourseService.save_live($scope.course).then(function(){
+                $state.go('home.livecourse')
+            });
+        }
+    }
+]);
+
+angular.module('controllers').controller('LiveCourseAddController', ['$http', '$scope', '$state', '$stateParams', 'CourseService',
+    function ($http, $scope, $state, $stateParams, CourseService) {
+        'use strict';
+        $scope.add_live = function() {
+            CourseService.add_live($scope.course).then(function(){
                 $state.go('home.livecourse')
             });
         }
@@ -203,6 +219,11 @@ angular.module('controllers').controller('HisCourseController', ['$http', '$scop
                 $scope.maxSize = 5;
             });
         };
+        $scope.delHisById = function(tid) {
+            CourseService.delHisById(tid).then(function(){
+                location.reload()
+            })
+        }
     }
 ]);
 
@@ -216,6 +237,17 @@ angular.module('controllers').controller('HisCourseEditController', ['$http', '$
 
         $scope.save_his = function() {
             CourseService.save_his($scope.course).then(function(){
+                $state.go('home.hiscourse')
+            });
+        }
+    }
+]);
+
+angular.module('controllers').controller('HisCourseAddController', ['$http', '$scope', '$state', '$stateParams', 'CourseService',
+    function ($http, $scope, $state, $stateParams, CourseService) {
+        'use strict';
+        $scope.add_his = function() {
+            CourseService.add_his($scope.course).then(function(){
                 $state.go('home.hiscourse')
             });
         }

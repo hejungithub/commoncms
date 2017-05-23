@@ -111,6 +111,16 @@ angular.module('routeApp', [
             }
         })
 
+        .state('home.livecourseadd', {
+            url:'course/live/add',
+            views: {
+                'rtcontent@': {
+                    templateUrl: '/cms/static/views/livecourseadd.html',
+                    controller: 'LiveCourseAddController'
+                }
+            }
+        })
+
         .state('home.hiscourse', {
             url:'course/his',
             views: {
@@ -130,6 +140,16 @@ angular.module('routeApp', [
                 'rtcontent@': {
                     templateUrl: '/cms/static/views/hiscourseedit.html',
                     controller: 'HisCourseEditController'
+                }
+            }
+        })
+
+        .state('home.hiscourseadd', {
+            url:'course/his/add',
+            views: {
+                'rtcontent@': {
+                    templateUrl: '/cms/static/views/hiscourseadd.html',
+                    controller: 'HisCourseAddController'
                 }
             }
         })

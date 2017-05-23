@@ -273,6 +273,36 @@ angular.module('services').factory('UserService', ['$q', '$http',
 angular.module('services').factory('CourseService', ['$q', '$http',
     function ($q, $http) {
         return {
+            delLiveById: function(id){
+                var deferred = $q.defer();
+                $http.get('/cms/live/del/' + id)
+                    .then(function (res) {
+                        if ($.isEmptyObject(res)) {
+                            deferred.reject();
+                        } else {
+                            deferred.resolve(res.data);
+                        }
+                    }, function () {
+                        deferred.reject();
+                        window.location.href = "/cms/"
+                    });
+                return deferred.promise;
+            },
+            delHisById: function(id){
+                var deferred = $q.defer();
+                $http.get('/cms/his/del/' + id)
+                    .then(function (res) {
+                        if ($.isEmptyObject(res)) {
+                            deferred.reject();
+                        } else {
+                            deferred.resolve(res.data);
+                        }
+                    }, function () {
+                        deferred.reject();
+                        window.location.href = "/cms/"
+                    });
+                return deferred.promise;
+            },
             getLiveById: function (id) {
                 var deferred = $q.defer();
                 $http.get('/cms/live/get/' + id)
@@ -303,6 +333,21 @@ angular.module('services').factory('CourseService', ['$q', '$http',
 
                 return deferred.promise;
             },
+            add_live: function(obj) {
+                var deferred = $q.defer();
+                $http.post('/cms/live/add', JSON.stringify(obj))
+                    .then(function (res) {
+                        if ($.isEmptyObject(res)) {
+                            deferred.reject();
+                        } else {
+                            deferred.resolve(res.data);
+                        }
+                    }, function () {
+                        deferred.reject();
+                    });
+
+                return deferred.promise;
+            },
             getHisById: function (id) {
                 var deferred = $q.defer();
                 $http.get('/cms/his/get/' + id)
@@ -321,6 +366,21 @@ angular.module('services').factory('CourseService', ['$q', '$http',
             save_his: function(obj) {
                 var deferred = $q.defer();
                 $http.post('/cms/his/save', JSON.stringify(obj))
+                    .then(function (res) {
+                        if ($.isEmptyObject(res)) {
+                            deferred.reject();
+                        } else {
+                            deferred.resolve(res.data);
+                        }
+                    }, function () {
+                        deferred.reject();
+                    });
+
+                return deferred.promise;
+            },
+            add_his: function(obj) {
+                var deferred = $q.defer();
+                $http.post('/cms/his/add', JSON.stringify(obj))
                     .then(function (res) {
                         if ($.isEmptyObject(res)) {
                             deferred.reject();
